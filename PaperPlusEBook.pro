@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+include(qzxing/QZXing.pri)
+
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -28,13 +30,16 @@ SOURCES += \
         mainwindow.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    qrcode.h
 
 FORMS += \
         mainwindow.ui
 
-INCLUDEPATH+= C:\OpenCV\opencv\build\include \
-            C:\OpenCV\opencv\build\include\opencv \
-            C:\OpenCV\opencv\build\include\opencv2
+INCLUDEPATH += \
+        E:/develop/opencv/build/include \
+        E:/develop/opencv/build/include\opencv  \
+        E:/develop/opencv/build/include\opencv2
 
-LIBS += C:\OpenCV\opencv\build\x64\vc14\lib\*.lib
+LIBS += E:/develop/opencv/build/x64/vc15/lib/opencv_world341.lib \
+        E:/develop/opencv/build/x64/vc15/lib/opencv_world341d.lib
