@@ -612,7 +612,7 @@ namespace Poppler {
     void Document::setColorDisplayProfile(void* outputProfileA)
     {
 #if defined(USE_CMS)
-        GfxColorSpace::setDisplayProfile((cmsHPROFILE)outputProfileA);
+       // GfxColorSpace::setDisplayProfile((cmsHPROFILE)outputProfileA);
 #else
         Q_UNUSED(outputProfileA);
 #endif
@@ -622,7 +622,7 @@ namespace Poppler {
     {
 #if defined(USE_CMS)
         GooString *profileName = QStringToGooString( name );
-        GfxColorSpace::setDisplayProfileName(profileName);
+        //GfxColorSpace::setDisplayProfileName(profileName);
         delete profileName;
 #else
         Q_UNUSED(name);
@@ -632,7 +632,8 @@ namespace Poppler {
     void* Document::colorRgbProfile() const
     {
 #if defined(USE_CMS)
-        return (void*)GfxColorSpace::getRGBProfile();
+        //return (void*)GfxColorSpace::getRGBProfile();
+        return NULL;
 #else
         return NULL;
 #endif
@@ -641,7 +642,8 @@ namespace Poppler {
     void* Document::colorDisplayProfile() const
     {
 #if defined(USE_CMS)
-       return (void*)GfxColorSpace::getDisplayProfile();
+      // return (void*)GfxColorSpace::getDisplayProfile();
+        return NULL;
 #else
        return NULL;
 #endif

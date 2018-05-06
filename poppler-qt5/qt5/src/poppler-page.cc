@@ -520,7 +520,7 @@ QImage Page::renderToImage(double xres, double yres, int x, int y, int w, int h,
 {
   int rotation = (int)rotate * 90;
   QImage img;
-  switch(m_page->parentDoc->m_backend)
+ /* switch(m_page->parentDoc->m_backend)
   {
     case Poppler::Document::SplashBackend:
     {
@@ -597,7 +597,7 @@ QImage Page::renderToImage(double xres, double yres, int x, int y, int w, int h,
                                                (hideAnnotations) ? annotDisplayDecideCbk : nullAnnotCallBack,
                                                nullptr, gTrue);
 
-      img = splash_output.getXBGRImage( true /* takeImageData */);
+      img = splash_output.getXBGRImage( true /* takeImageData *//*);
 #endif
       break;
     }
@@ -621,8 +621,23 @@ QImage Page::renderToImage(double xres, double yres, int x, int y, int w, int h,
       img = tmpimg;
       break;
     }
-  }
+  }*/
+  QSize size = pageSize();
+  QImage tmpimg(w == -1 ? qRound( size.width() * xres / 72.0 ) : w, h == -1 ? qRound( size.height() * yres / 72.0 ) : h, QImage::Format_ARGB32);
 
+  QColor bgColor(m_page->parentDoc->paperColor.red(),
+                 m_page->parentDoc->paperColor.green(),
+                 m_page->parentDoc->paperColor.blue(),
+                 m_page->parentDoc->paperColor.alpha());
+
+  tmpimg.fill(bgColor);
+
+  QPainter painter(&tmpimg);
+  QImageDumpingArthurOutputDev arthur_output(&painter, &tmpimg);
+  arthur_output.setCallbacks(partialUpdateCallback, shouldDoPartialUpdateCallback, shouldAbortRenderCallback, payload);
+  renderToArthur(&arthur_output, &painter, m_page, xres, yres, x, y, w, h, rotate, DontSaveAndRestore);
+  painter.end();
+  img = tmpimg;
   if (shouldAbortRenderCallback && shouldAbortRenderCallback(payload))
       return QImage();
 

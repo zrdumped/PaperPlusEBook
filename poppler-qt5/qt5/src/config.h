@@ -166,7 +166,7 @@
 #define TEXTOUT_WORD_LIST 1
 
 /* Defines if use cms */
-#define USE_CMS 1
+#define USE_CMS 0
 
 /* Use fixed point arithmetic in the Splash backend */
 /* #undef USE_FIXEDPOINT */
