@@ -13,10 +13,41 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QLabel{padding-left: 3px;padding-right: 3px}</string>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="2" rowspan="2" colspan="3">
-     <widget class="QLabel" name="RightPG">
+    <item row="0" column="0" rowspan="2" colspan="2">
+     <widget class="QLabel" name="LeftPG">
+      <property name="font">
+       <font>
+        <pointsize>18</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{padding-left: 3px;padding-right: 3px}</string>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="4">
+     <widget class="QPushButton" name="OffsetSetterTmp">
+      <property name="text">
+       <string>减少页数</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="5">
+     <widget class="QLabel" name="Offset">
       <property name="text">
        <string>TextLabel</string>
       </property>
@@ -29,38 +60,44 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="0" rowspan="2" colspan="2">
-     <widget class="QLabel" name="LeftPG">
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="2">
+    <item row="2" column="3">
      <widget class="QPushButton" name="OffsetSetter">
       <property name="text">
        <string>增加页数</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QLabel" name="label">
+    <item row="0" column="2">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="4" rowspan="2" colspan="2">
+     <widget class="QLabel" name="RightPG">
+      <property name="font">
+       <font>
+        <pointsize>18</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>TextLabel</string>
       </property>
-     </widget>
-    </item>
-    <item row="2" column="4">
-     <widget class="QLabel" name="Offset">
-      <property name="text">
-       <string>TextLabel</string>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
       </property>
-     </widget>
-    </item>
-    <item row="2" column="3">
-     <widget class="QPushButton" name="OffsetSetterTmp">
-      <property name="text">
-       <string>减少页数</string>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

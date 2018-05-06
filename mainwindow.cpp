@@ -1,5 +1,6 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "qrcode.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <iostream>
@@ -56,72 +57,81 @@ int MainWindow::InitPageNumber(){
 }
 
 int MainWindow::SetPage(){
-    return 0;
-//    QImage leftpgimg, rightpgimg;
-//    int maxpgs = book->numPages();
-//    if(left_page_num + 1 < 0 || left_page_num >= maxpgs){
-//        //white
-//        leftpgimg = QImage(pg_width, pg_height, QImage::Format_RGBA8888);
-//        leftpgimg.fill(QColor(255,255,255));
-//        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
-//        rightpgimg = QImage(pg_width, pg_height, QImage::Format_RGBA8888);
-//        rightpgimg.fill(QColor(255,255,255));
-//        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
-//    }
-//    else if(left_page_num < 0){
-//        Poppler::Page *rightpg = book->page(0);
-//        //the first page is on the right
-//        rightpgimg = rightpg->renderToImage(res_x, res_y);
-//        rightpgimg = rightpgimg.scaled(pg_width, pg_height);
-//        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
-//        //deal with left
-//        leftpgimg = QImage(leftpgimg.width(), leftpgimg.height(), QImage::Format_RGBA8888);
-//        leftpgimg.fill(QColor(255,255,255));
-//        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
-//        delete rightpg;
-//    }
-//    else if(left_page_num + 1 >= maxpgs){
-//        Poppler::Page *leftpg = book->page(maxpgs - 1);
-//        //the last page is on the left
-//        leftpgimg = leftpg->renderToImage(res_x, res_y);
-//        leftpgimg = leftpgimg.scaled(pg_width,pg_height);
-//        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
-//        //deal with right
-//        rightpgimg = QImage(leftpgimg.width(), leftpgimg.height(), QImage::Format_RGBA8888);
-//        rightpgimg.fill(QColor(255,255,255));
-//        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
-//        delete leftpg;
-//    }
-//    else{
-//        //normal pages
-//        Poppler::Page *leftpg = book->page(left_page_num);
-//        Poppler::Page *rightpg = book->page(left_page_num + 1);
-//        leftpgimg = leftpg->renderToImage(res_x, res_y,-1,-1,leftpg->pageSize().width(),leftpg->pageSize().height());
-//        rightpgimg = rightpg->renderToImage(res_x, res_y,-1,-1,rightpg->pageSize().width(),rightpg->pageSize().height());
-//        leftpgimg = leftpgimg.scaled(pg_width, pg_height);
-//        rightpgimg = rightpgimg.scaled(pg_width, pg_height);
-//        std::cout<<leftpgimg.size().height()<<" "<<rightpgimg.size().width()<<std::endl;
-//        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
-//        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
-//        delete leftpg;
-//        delete rightpg;
-//    }
-//    return left_page_num;
+    book.seekg(left_page_num * each_page_bytes, std::ios::beg);
+    char buf[each_page_bytes+1];
+    book.read(buf, each_page_bytes);
+    buf[each_page_bytes] = '\0';
+    ui->LeftPG->setText(QString::fromLocal8Bit(buf, each_page_bytes));
+    std::cout<<buf<<std::endl;
+    book.read(buf, each_page_bytes);
+    ui->RightPG->setText(QString::fromLocal8Bit(buf, each_page_bytes));
+    /*QImage leftpgimg, rightpgimg;
+    int maxpgs = book->numPages();
+    if(left_page_num + 1 < 0 || left_page_num >= maxpgs){
+        //white
+        leftpgimg = QImage(pg_width, pg_height, QImage::Format_RGBA8888);
+        leftpgimg.fill(QColor(255,255,255));
+        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
+        rightpgimg = QImage(pg_width, pg_height, QImage::Format_RGBA8888);
+        rightpgimg.fill(QColor(255,255,255));
+        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
+    }
+    else if(left_page_num < 0){
+        Poppler::Page *rightpg = book->page(0);
+        //the first page is on the right
+        rightpgimg = rightpg->renderToImage(res_x, res_y);
+        rightpgimg = rightpgimg.scaled(pg_width, pg_height);
+        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
+        //deal with left
+        leftpgimg = QImage(leftpgimg.width(), leftpgimg.height(), QImage::Format_RGBA8888);
+        leftpgimg.fill(QColor(255,255,255));
+        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
+        delete rightpg;
+    }
+    else if(left_page_num + 1 >= maxpgs){
+        Poppler::Page *leftpg = book->page(maxpgs - 1);
+        //the last page is on the left
+        leftpgimg = leftpg->renderToImage(res_x, res_y);
+        leftpgimg = leftpgimg.scaled(pg_width,pg_height);
+        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
+        //deal with right
+        rightpgimg = QImage(leftpgimg.width(), leftpgimg.height(), QImage::Format_RGBA8888);
+        rightpgimg.fill(QColor(255,255,255));
+        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
+        delete leftpg;
+    }
+    else{
+        //normal pages
+        Poppler::Page *leftpg = book->page(left_page_num);
+        Poppler::Page *rightpg = book->page(left_page_num + 1);
+        leftpgimg = leftpg->renderToImage(res_x, res_y,-1,-1,leftpg->pageSize().width(),leftpg->pageSize().height());
+        rightpgimg = rightpg->renderToImage(res_x, res_y,-1,-1,rightpg->pageSize().width(),rightpg->pageSize().height());
+        leftpgimg = leftpgimg.scaled(pg_width, pg_height);
+        rightpgimg = rightpgimg.scaled(pg_width, pg_height);
+        std::cout<<leftpgimg.size().height()<<" "<<rightpgimg.size().width()<<std::endl;
+        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
+        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
+        delete leftpg;
+        delete rightpg;
+    }*/
+    return left_page_num;
 }
 
 void MainWindow::SelectBook(){
     //choose a book
-//    book_name = QFileDialog::getOpenFileName(this, NULL, NULL, "*.pdf");
-//    if (book_name == NULL)
-//        return;
-//    //set up document
-//    book = Poppler::Document::load(book_name);
-//    //set page number
-//    left_page_num = InitPageNumber();
-//    //set up page image
-//    SetPage();
-//    if(left_page_num < 0)
-//        normalWarning("无可读内容");
+    book_name = QFileDialog::getOpenFileName(this, NULL, NULL, "*.txt");
+    if (book_name == NULL)
+        return;
+    //set up document
+   // book = Poppler::Document::load(book_name);
+    book.open(book_name.toLocal8Bit().toStdString());
+
+    //set page number
+    left_page_num = InitPageNumber();
+    //set up page image
+    SetPage();
+    if(left_page_num < 0)
+        normalWarning("无可读内容");
     return;
 
 }
@@ -134,8 +144,24 @@ int MainWindow::turnover(int pages){
 }
 
 int MainWindow::AddPageNumber(int number){
-    //adjust offset
+    book.seekg(0, book.end);
+    size_t p = book.tellg();
+    if(p%each_page_bytes)
+        p = p/each_page_bytes + 1;
+    else
+        p = p/each_page_bytes;
+
     int n = base_offset;
+        int off = number + base_offset;
+        if(left_page_num + off < 0)
+            base_offset = 0;
+        else if(left_page_num + off + 1 > p)
+            base_offset = (p - 2)>0?p-2:0;
+        else{
+            base_offset += number;
+        }
+    //adjust offset
+   /* int n = base_offset;
     int off = number + base_offset;
     if(left_page_num + off < 0)
         base_offset = 0;
@@ -143,22 +169,22 @@ int MainWindow::AddPageNumber(int number){
 //        base_offset = book->numPages() - 2;
     else{
         base_offset += number;
-    }
+    }*/
     //change page and the offset label in ui
     ui->Offset->setText(QString::number(turnover(base_offset - n)));
     return base_offset;
 }
 
 void MainWindow::SetOffset(){
-//    if(!book)
-//        return;
-    //add quantity of book pages for now
+    /*if(!book)
+        return;
+    //add quantity of book pages for now*/
     AddPageNumber(book_page_num);
 }
 
 void MainWindow::SetOffsetTmp(){
-//    if(!book)
-//        return;
-    //minus quantity of book pages for now
+    /*if(!book)
+        return;
+    //minus quantity of book pages for now*/
     AddPageNumber(-book_page_num);
 }

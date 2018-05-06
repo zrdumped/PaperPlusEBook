@@ -2,11 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <fstream>
 //#include <poppler/cpp/poppler-document.h>
 //#include <poppler/cpp/poppler-page.h>
 #ifdef _WIN32
    //define something for Windows (32-bit and 64-bit, this part is common)
+
     //#include "poppler/poppler-qt5.h"
+
+
    #ifdef _WIN64
       //define something for Windows (64-bit only)
    #endif
@@ -45,6 +49,9 @@ private:
     int book_page_num = 100;
     //poppler::document *book;
     //Poppler::Document *book;
+    int each_page_bytes = 400;
+    //Poppler::Document *book;
+    std::fstream book;
 private slots:
     void SelectBook();
     void SetOffset();
