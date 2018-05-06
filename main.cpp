@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     w.show();
 
     cv::Mat image;
-    image = cv::imread("F:\\1.png");
+    image = cv::imread("1.png");
     if(image.empty())
         return 0;
     cv::namedWindow("image show");
