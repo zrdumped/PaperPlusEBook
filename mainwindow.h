@@ -4,7 +4,15 @@
 #include <QMainWindow>
 //#include <poppler/cpp/poppler-document.h>
 //#include <poppler/cpp/poppler-page.h>
-#include "poppler-qt5/qt5/src/poppler-qt5.h"
+#ifdef _WIN32
+   //define something for Windows (32-bit and 64-bit, this part is common)
+    //#include "poppler/poppler-qt5.h"
+   #ifdef _WIN64
+      //define something for Windows (64-bit only)
+   #endif
+#elif __APPLE__
+   #include "poppler-qt5/qt5/src/poppler-qt5.h"
+#endif
 
 namespace Ui {
 class MainWindow;
@@ -36,7 +44,7 @@ private:
     int base_offset = 0;
     int book_page_num = 100;
     //poppler::document *book;
-    Poppler::Document *book;
+    //Poppler::Document *book;
 private slots:
     void SelectBook();
     void SetOffset();
