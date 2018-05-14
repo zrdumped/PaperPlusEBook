@@ -165,8 +165,8 @@ int MainWindow::AddPageNumber(int number){
     int off = number + base_offset;
     if(left_page_num + off < 0)
         base_offset = 0;
-    else if(left_page_num + off + 1 > book->numPages())
-        base_offset = book->numPages() - 2;
+//    else if(left_page_num + off + 1 > book->numPages())
+//        base_offset = book->numPages() - 2;
     else{
         base_offset += number;
     }*/
