@@ -1,6 +1,6 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "qrcode.h"
+//#include "qrcode.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <iostream>
@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->Offset->setText(QString::number(0));
     //testQRCode(ui->label);
     //generateQRCodes(100);
+    ui->LeftPG->setPixmap(QPixmap(":/icons/books.png"));
 }
 
 MainWindow::~MainWindow()
