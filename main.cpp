@@ -1,12 +1,13 @@
 ﻿#include "mainwindow.h"
 #include <QApplication>
-#include "qrcode.h"
+#include <bookmetadata.h>
+//#include "qrcode.h"
 #include <opencv2/opencv.hpp>
 #include <iostream>
 using namespace std;
-using namespace cv;
+//using namespace cv;
 
-int testOpenCV()
+/*int testOpenCV()
 {
     cv::Mat image;
     image = cv::imread("1.png");
@@ -38,13 +39,14 @@ int getQRcodeFromVideo(){
     }
     return 0;
 }
-
+*/
 int main(int argc, char *argv[])
 {
+
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
     //testOpenCV();
-    getQRcodeFromVideo();
+    //getQRcodeFromVideo();
     return a.exec();
 }

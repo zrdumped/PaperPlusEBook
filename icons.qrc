@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/books.png</file>
+        <file>icons/last.png</file>
+        <file>icons/lastgrey.png</file>
+        <file>icons/next.png</file>
+        <file>icons/nextgrey.png</file>
+    </qresource>
+</RCC>
