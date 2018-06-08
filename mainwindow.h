@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "imageconfig.h"
 #include <fstream>
 //#include <poppler/cpp/poppler-document.h>
 //#include <poppler/cpp/poppler-page.h>
@@ -36,9 +37,12 @@ public:
     int SetPage();
     int turnover(int pages);
     int AddPageNumber(int number);
+public Q_SLOTS:
+    void OpenImageConfigureWindow();
 
 private:
     Ui::MainWindow *ui;
+    ImageConfig *window;
     int left_page_num = 0;
     QString book_name;
     int pg_width = 480;

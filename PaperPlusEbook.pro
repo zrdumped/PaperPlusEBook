@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 #DEFINES += CWTWINDOWS
-#DEFINES += ZRWINDOWS
-DEFINES += TZYMACOSX
+DEFINES += ZRWINDOWS
+#DEFINES += TZYMACOSX
 
 DEFINES += DLL_EXPORT
 
@@ -155,7 +155,8 @@ SOURCES += \
     bookmetadata.cpp \
     bookpagedata.cpp \
     book.cpp \
-    note.cpp
+    note.cpp \
+    imageconfig.cpp
 
 
 
@@ -294,10 +295,12 @@ HEADERS += \
     bookmetadata.h \
     bookpagedata.h \
     book.h \
-    note.h
+    note.h \
+    imageconfig.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    imageconfig.ui
 if(contains(DEFINES, CWTWINDOWS)){
 INCLUDEPATH += \
         E:/develop/opencv/build/include \
