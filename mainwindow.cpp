@@ -59,7 +59,7 @@ int MainWindow::InitPageNumber(){
 
 int MainWindow::SetPage(){
     book.seekg(left_page_num * each_page_bytes, std::ios::beg);
-    char buf[each_page_bytes+1];
+    char buf[12];
     book.read(buf, each_page_bytes);
     buf[each_page_bytes] = '\0';
     ui->LeftPG->setText(QString::fromLocal8Bit(buf, each_page_bytes));
@@ -188,4 +188,9 @@ void MainWindow::SetOffsetTmp(){
         return;
     //minus quantity of book pages for now*/
     AddPageNumber(-book_page_num);
+}
+
+void MainWindow::OpenImageConfigureWindow(){
+    window = new ImageConfig(this);
+    window->show();
 }

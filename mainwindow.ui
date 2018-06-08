@@ -138,7 +138,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0">
      <property name="spacing">
       <number>50</number>
      </property>
@@ -185,6 +185,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Image Configuration</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QFrame" name="frame_3">
        <property name="styleSheet">
         <string notr="true">QFrame{background-color: rgb(255, 255, 255);}</string>
@@ -206,7 +213,7 @@
      <x>0</x>
      <y>0</y>
      <width>817</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
@@ -230,8 +237,8 @@
    <slot>SelectBook()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>156</x>
-     <y>310</y>
+     <x>99</x>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
      <x>272</x>
@@ -247,7 +254,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>386</x>
-     <y>310</y>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
      <x>272</x>
@@ -255,9 +262,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>OpenImageConfigureWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>308</x>
+     <y>249</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>678</x>
+     <y>358</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>SelectBook()</slot>
   <slot>SetOffset()</slot>
+  <slot>OpenImageConfigureWindow()</slot>
  </slots>
 </ui>
