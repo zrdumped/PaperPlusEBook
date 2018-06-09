@@ -296,7 +296,8 @@ HEADERS += \
     bookpagedata.h \
     book.h \
     note.h \
-    imageconfig.h
+    imageconfig.h \
+    qrcode.h
 
 FORMS += \
         mainwindow.ui \

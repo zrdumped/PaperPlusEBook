@@ -1,7 +1,7 @@
 ﻿#include "mainwindow.h"
 #include <QApplication>
 #include <bookmetadata.h>
-//#include "qrcode.h"
+#include "qrcode.h"
 #include <opencv2/opencv.hpp>
 #include <iostream>
 using namespace std;
@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
+    testQRCode2();
     //testOpenCV();
     //getQRcodeFromVideo();
     return a.exec();
