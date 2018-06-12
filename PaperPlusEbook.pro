@@ -3,8 +3,8 @@
 # Project created by QtCreator 2018-05-04T18:43:03
 #
 #-------------------------------------------------
-#DEFINES += CWTWINDOWS
-DEFINES += ZRWINDOWS
+DEFINES += CWTWINDOWS
+#DEFINES += ZRWINDOWS
 #DEFINES += TZYMACOSX
 
 DEFINES += DLL_EXPORT
@@ -156,7 +156,8 @@ SOURCES += \
     bookpagedata.cpp \
     book.cpp \
     note.cpp \
-    imageconfig.cpp
+    imageconfig.cpp \
+    touchtracker.cpp
 
 
 
@@ -297,19 +298,30 @@ HEADERS += \
     book.h \
     note.h \
     imageconfig.h \
-    qrcode.h
+    qrcode.h \
+    touchtracker.h
 
 FORMS += \
         mainwindow.ui \
-    imageconfig.ui
+        imageconfig.ui
 if(contains(DEFINES, CWTWINDOWS)){
 INCLUDEPATH += \
-        E:/develop/opencv/build/include \
-        E:/develop/opencv/build/include\opencv  \
-        E:/develop/opencv/build/include\opencv2
+        #E:/develop/opencv/build/include
+        E:\develop\opencv_msvc\install\include
 
-LIBS += E:/develop/opencv/build/x64/vc15/lib/opencv_world341.lib \
-        E:/develop/opencv/build/x64/vc15/lib/opencv_world341d.lib
+LIBS += \
+        #-LE:/develop/opencv/build/x64/vc15/lib/ \
+        #-lopencv_world341 \
+        #-lopencv_world341d \
+        #E:\develop\opencv_qt\bin\libopencv_world341.dll
+        #E:/develop/opencv_qt/install/x86/mingw/lib/libopencv_*.a
+        -LE:\develop\opencv_msvc\install\x64\vc15\lib \
+        -lopencv_highgui341 \
+        -lopencv_core341 \
+        -lopencv_videoio341 \
+        -lopencv_imgproc341  \
+        -lopencv_imgcodecs341 \
+        -lopencv_tracking341 \
 }
 else{
 if(contains(DEFINES, ZRWINDOWS)){

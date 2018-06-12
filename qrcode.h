@@ -12,6 +12,9 @@
 #include <QDebug>
 #include <QZXing.h>
 
+#define PROJECT_DIR QString("E:/V-Codes/PaperPlusEBook/")
+#define TRY_HARDER
+
 /********************************************************
  * Defination Part
  ********************************************************/
@@ -67,6 +70,11 @@ void testQRCode(QLabel *label);
  */
 void testQRCode2();
 
+/**
+ * @brief testQRCode3 - test low contrast image (failed)
+ */
+void testQRCode3();
+
 /********************************************************
  * Implementation Part
  ********************************************************/
@@ -77,6 +85,9 @@ static bool firsttime = true;
 int qrcode2int(QImage image, bool *ok)
 {
     if (firsttime) {
+#ifdef TRY_HARDER
+        decoder.setTryHarder(true);
+#endif
         decoder.setDecoder( QZXing::DecoderFormat_QR_CODE);
         firsttime = false;
     }
@@ -90,11 +101,7 @@ void qrcode2int2(QImage image, int *val1, int *val2, float ratio, bool *ok)
     QImage image1 = image.copy(0, 0, dividePos, image.height());
     QImage image2 = image.copy(dividePos, 0, image.width() - dividePos, image.height());
 
-    //image1.save("E:/QrcodeTest1.png");
-    //image2.save("E:/QrcodeTest2.png");
-
     *val1 = qrcode2int(image1, &ok1);
-    //qDebug() << "???" << qrcode2string(image2);
     *val2 = qrcode2int(image2, &ok2);
     if (ok)
         *ok = ok1 & ok2;
@@ -103,6 +110,9 @@ void qrcode2int2(QImage image, int *val1, int *val2, float ratio, bool *ok)
 QString qrcode2string(QImage image)
 {
     if (firsttime) {
+#ifdef TRY_HARDER
+        decoder.setTryHarder(true);
+#endif
         decoder.setDecoder( QZXing::DecoderFormat_QR_CODE);
         firsttime = false;
     }
@@ -129,12 +139,12 @@ void generateQRCodes(int end)
 
 void testQRCode(QLabel *label)
 {
-    QImage imageToDecode("E:/V-Codes/QRCodeModule/qrcode-test1.png");
+    QImage imageToDecode(PROJECT_DIR + "resources/qrcode/easy.png");
     bool ok;
     qDebug() << "Web Address Test: " << qrcode2string(imageToDecode);
 
     QImage qrcode = int2qrcode(85);
-    qDebug() << "Number Test: " << qrcode2int(qrcode, &ok);
+    qDebug() << "Test basic: " << qrcode2int(qrcode, &ok);
 
     qrcode = qrcode.scaled(label->geometry().height(), label->geometry().height(),
                            Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -143,11 +153,21 @@ void testQRCode(QLabel *label)
 
 void testQRCode2()
 {
-    QImage image("E:/V-Codes/PaperPlusEBook/resources/qrcode/2qrcodes.png");
+    QImage image(PROJECT_DIR + "resources/qrcode/2qrcodes.png");
     int val1, val2;
     int expect1 = 1, expect2 = 2;
     qrcode2int2(image, &val1, &val2, 0.5f);
     bool pass = val1==expect1 && val2==expect2;
-    qDebug() << "qrcode2int2 test: " << (pass?"pass":"fail");
+    qDebug() << "Test qrcode2int2(): " << (pass?"pass":"fail");
+    qDebug() << "\t[expect] " << expect1 << ", "<<expect2;
+    qDebug() << "\t[get]    " << val1 << ", " << val2;
+}
+
+void testQRCode3()
+{
+    QImage image1(PROJECT_DIR + "resources/qrcode/blackAndWhite.png");
+    QImage image2(PROJECT_DIR + "resources/qrcode/easy.png");
+    qDebug() << "low-contrast test: " << qrcode2string(image1);
+    qDebug() << "low-contrast test: " << qrcode2string(image2);
 }
 #endif

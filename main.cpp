@@ -1,16 +1,19 @@
 ﻿#include "mainwindow.h"
 #include <QApplication>
-#include <bookmetadata.h>
-#include "qrcode.h"
 #include <opencv2/opencv.hpp>
 #include <iostream>
-using namespace std;
-//using namespace cv;
 
-/*int testOpenCV()
+#include <bookmetadata.h>
+#include <qrcode.h>
+#include <touchtracker.h>
+
+using namespace std;
+using namespace cv;
+
+int testOpenCV()
 {
     cv::Mat image;
-    image = cv::imread("1.png");
+    image = cv::imread("E:/V-Codes/PaperPlusEBook/resources/qrcode/easy.png");
     if(image.empty())
         return 0;
     cv::namedWindow("image show");
@@ -19,7 +22,7 @@ using namespace std;
 }
 
 int getQRcodeFromVideo(){
-    VideoCapture cap(3);
+    VideoCapture cap(0);
     if(!cap.isOpened()){
         cout<<"create camera capture error"<<endl;
         system("pause");
@@ -33,21 +36,21 @@ int getQRcodeFromVideo(){
         imshow("img",img);
 
         int r = qrcode2int(QImage((const uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888).rgbSwapped(), NULL );
-        char c = cvWaitKey(33);
+        char c = cvWaitKey(1);
         if(c == 'a') break;
         cout << r<< endl;
     }
     return 0;
 }
-*/
+
 int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-    testQRCode2();
     //testOpenCV();
     //getQRcodeFromVideo();
+    TouchTracker::example();
     return a.exec();
 }
