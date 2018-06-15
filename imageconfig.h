@@ -1,18 +1,18 @@
 #ifndef IMAGECONFIG_H
 #define IMAGECONFIG_H
 
-#include <QWidget>
+#include <QMainWindow>
 
 namespace Ui {
 class ImageConfig;
 }
 
-class ImageConfig : public QWidget
+class ImageConfig : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit ImageConfig(QWidget *parent = 0);
+    explicit ImageConfig(QMainWindow *parent = 0);
     ~ImageConfig();
 
 private:

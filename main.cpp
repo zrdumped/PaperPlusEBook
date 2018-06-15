@@ -1,4 +1,5 @@
-﻿#include "mainwindow.h"
+﻿#pragma once
+#include "mainwindow.h"
 #include <QApplication>
 #include <bookmetadata.h>
 //#include "qrcode.h"
