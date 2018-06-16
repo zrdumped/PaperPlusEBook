@@ -68,7 +68,7 @@ int TouchTracker::example()
         return 1;
     }
 #ifdef SAVE_VIDEO
-    VideoWriter writer(VIDEO_IN + ".avi", CV_FOURCC('D', 'I', 'V', 'X'), 25.0,
+    VideoWriter writer(VIDEO_IN + ".avi", CV_FOURCC('D', 'I', 'V', 'X'), 18.0,
                        Size(video.get(CV_CAP_PROP_FRAME_WIDTH), video.get(CV_CAP_PROP_FRAME_HEIGHT)));
 #endif
 
@@ -79,29 +79,31 @@ int TouchTracker::example()
     //Rect2d bbox(415, 80, 54, 49);
     //Rect2d bbox1(399, 125, 78, 32);
 
-    Rect2d bbox(415, 80, 54, 49);// = selectROI(frame, false);
-    rectangle(frame, bbox, Scalar( 255, 0, 0 ), 2, 1 );
-    std::cout << bbox;
-    if (bbox.area() == 0)
+    Rect2d bbox0(415, 80, 54, 49);// = selectROI(frame, false);
+    rectangle(frame, bbox0, Scalar( 255, 0, 0 ), 2, 1 );
+    std::cout << bbox0;
+    if (bbox0.area() == 0)
         return 0;
-    tracker->init(frame, bbox);
+    tracker->init(frame, bbox0);
 
 #ifdef TRACK_TWO
     Rect2d bbox1(399, 125, 78, 32);// = selectROI(frame, false);
-    rectangle(frame, bbox, Scalar( 255, 0, 0 ), 2, 1 );
+    rectangle(frame, bbox0, Scalar( 255, 0, 0 ), 2, 1 );
     std::cout << ", " << bbox1;
     if (bbox1.area() == 0)
         return 0;
     tracker1->init(frame, bbox1);
 #endif
 
+    int offset1x = -8, offset1y = -3,
+        offset2x = -16, offset2y = -11;
     imshow("Tracking", frame);
-    std::cout << endl;
+    cout << endl;
 
     while(video.read(frame))
     {
         double timer = (double)getTickCount();
-        ok = tracker->update(frame, bbox);
+        ok = tracker->update(frame, bbox0);
 #ifdef TRACK_TWO
         ok1 = tracker1->update(frame, bbox1);
 #endif
@@ -109,8 +111,22 @@ int TouchTracker::example()
 
 #ifdef TRACK_TWO
         if (ok && ok1) {
-            rectangle(frame, bbox, Scalar( 255, 0, 0 ), 2, 1 );
+            rectangle(frame, bbox0, Scalar( 255, 0, 0 ), 2, 1 );
             rectangle(frame, bbox1, Scalar( 255, 0, 0 ), 2, 1 );
+
+            Point p1 = Point(bbox0.x + bbox0.width + offset1x, bbox0.y + bbox0.height + offset1y),
+                  p2 = Point(bbox1.x + bbox1.width + offset2x, bbox1.y + bbox1.height + offset2y);
+            if (p1.y >= p2.y)
+            {
+                putText(frame, "Touching", Point(100,80), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0,0,255),2);
+            }
+            else
+            {
+                putText(frame, QString::number(p1.y-p2.y).toStdString(), Point(100,80), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0,255,0),2);
+            }
+
+            circle(frame, p1, 2, Scalar(0, 0, 255), 2);
+            circle(frame, p2, 2, Scalar(0, 255, 0), 2);
         }
 #else
         if (ok) {
