@@ -1,4 +1,5 @@
-﻿#include "mainwindow.h"
+﻿#pragma once
+#include "mainwindow.h"
 #include <QApplication>
 #include <opencv2/opencv.hpp>
 #include <iostream>
