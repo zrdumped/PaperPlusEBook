@@ -40,7 +40,7 @@ SOURCES += \
         book.cpp \
         note.cpp \
         imageconfig.cpp \
-        touchtracker.cpp
+        touchtracker.cpp \
         mycv.cpp
 
 
@@ -54,7 +54,7 @@ HEADERS += \
         note.h \
         imageconfig.h \
         qrcode.h \
-        touchtracker.h
+        touchtracker.h \
         mycv.h
 
 FORMS += \
