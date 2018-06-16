@@ -6,7 +6,11 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 using namespace std;
-//using namespace cv;
+using namespace cv;
+
+VideoCapture capTop;
+VideoCapture capBottom1;
+VideoCapture capBottom2;
 
 /*int testOpenCV()
 {
@@ -41,6 +45,33 @@ int getQRcodeFromVideo(){
     return 0;
 }
 */
+
+//mode = 0 none
+//mode = 1 top only
+//mode = 2 one bottom only
+//mode = 3 two bottoms
+//mode = 4 all
+int initCamera(int mode, bool showImg){
+    switch(mode){
+    case 1:
+        capTop = VideoCapture(2);
+        if(!capTop.isOpened()){
+            cout<<"create camera capture error"<<endl;
+            system("pause");
+            exit(-1);
+        }
+        if(showImg){
+            Mat img;
+            capTop >> img;
+            imshow("top camera",img);
+        }
+        break;
+    default:
+        break;
+    }
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -49,5 +80,6 @@ int main(int argc, char *argv[])
     w.show();
     //testOpenCV();
     //getQRcodeFromVideo();
+    initCamera(1,false);
     return a.exec();
 }

@@ -156,7 +156,8 @@ SOURCES += \
     bookpagedata.cpp \
     book.cpp \
     note.cpp \
-    imageconfig.cpp
+    imageconfig.cpp \
+    mycv.cpp
 
 
 
@@ -296,7 +297,8 @@ HEADERS += \
     bookpagedata.h \
     book.h \
     note.h \
-    imageconfig.h
+    imageconfig.h \
+    mycv.h
 
 FORMS += \
         mainwindow.ui \
