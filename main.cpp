@@ -10,6 +10,7 @@
 using namespace std;
 using namespace cv;
 
+/*
 int testOpenCV()
 {
     cv::Mat image;
@@ -42,6 +43,7 @@ int getQRcodeFromVideo(){
     }
     return 0;
 }
+*/
 
 int main(int argc, char *argv[])
 {
@@ -52,5 +54,5 @@ int main(int argc, char *argv[])
     //testOpenCV();
     //getQRcodeFromVideo();
     TouchTracker::example();
-    return a.exec();
+    return 1;//a.exec();
 }
