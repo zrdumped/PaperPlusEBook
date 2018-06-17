@@ -6,17 +6,288 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1111</width>
+    <height>510</height>
    </rect>
+  </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <property name="autoFillBackground">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
+  <widget class="QLabel" name="image">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>640</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>659</x>
+     <y>10</y>
+     <width>111</width>
+     <height>481</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>相机</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>垂直相机</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="text">
+       <string>水平相机1</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_3">
+      <property name="text">
+       <string>水平相机2</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>标定</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_4">
+      <property name="text">
+       <string>全部标定</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_5">
+      <property name="text">
+       <string>仅标定投影区域</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_6">
+      <property name="text">
+       <string>仅标定笔</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>270</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_7">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>确定</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_8">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>取消</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="helpInfoDefault">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>10</y>
+     <width>320</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;提示信息&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;相机按钮调节显示系统中的三个摄像头&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;打开系统时必须进行全部标定&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;使用过程中若出现书写位置与目标位置差别过大，请尝试“仅标定投影区域”&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;使用过程中若出现笔记不能识别，请尝试“仅标定笔”&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;在使用过程中可随时通过“齿轮”按钮打开本页面&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="helpimage">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>250</y>
+     <width>320</width>
+     <height>240</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="helpInfoRect">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>10</y>
+     <width>320</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;提示信息——标定投影区域&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;请调整投影仪，使得投影区域在书本上尽可能呈矩形，两个二维码分别位于投影区域的左上角、右上角&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;图中四个绿色点为投影区域的识别区域，如果差别过大请手动调整点的位置&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;示例结果请参考下图&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;调整完毕后点击确认保存结果，取消退出&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <zorder>image</zorder>
+  <zorder>widget</zorder>
+  <zorder>helpimage</zorder>
+  <zorder>helpInfoRect</zorder>
+  <zorder>helpInfoDefault</zorder>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageConfig</receiver>
+   <slot>showCameraTop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>720</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>653</x>
+     <y>65</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageConfig</receiver>
+   <slot>showCameraBottom1()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>708</x>
+     <y>81</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>654</x>
+     <y>108</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageConfig</receiver>
+   <slot>showCameraBottom2()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>688</x>
+     <y>111</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>653</x>
+     <y>158</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_5</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageConfig</receiver>
+   <slot>ReactangleCalibration()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>695</x>
+     <y>180</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>657</x>
+     <y>208</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>showCameraTop()</slot>
+  <slot>showCameraBottom1()</slot>
+  <slot>showCameraBottom2()</slot>
+  <slot>ReactangleCalibration()</slot>
+ </slots>
 </ui>

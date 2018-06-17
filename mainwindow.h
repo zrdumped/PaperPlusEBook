@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include "imageconfig.h"
+#include <QMainWindow>
 #include <fstream>
 #include <QColor>
 #include <QString>
