@@ -4,17 +4,119 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <iostream>
+#include <QLayout>
 //#include <poppler/cpp/poppler-image.h>
-
+/*
+ * Menu: QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);} minimum height: 40px
+ */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->Offset->setText(QString::number(0));
+    //set QZxing side lengths
+    ui->leftQZxing->setMinimumWidth(qzxingSideLength);
+    ui->rightQZxing->setMinimumWidth(qzxingSideLength);
+    ui->leftQZxing->setMinimumHeight(qzxingSideLength);
+    ui->rightQZxing->setMinimumHeight(qzxingSideLength);
+    ui->leftQZxing->setMaximumWidth(qzxingSideLength);
+    ui->rightQZxing->setMaximumWidth(qzxingSideLength);
+    ui->leftQZxing->setMaximumHeight(qzxingSideLength);
+    ui->rightQZxing->setMaximumHeight(qzxingSideLength);
+    //set Paddings
+    ui->leftPadding->setMinimumWidth(sidePaddingWidth);
+    ui->rightPadding->setMinimumWidth(sidePaddingWidth);
+    ui->middleUpPadding->setMinimumWidth(middlePaddingWidth);
+    ui->middlePadding->setMinimumWidth(middlePaddingWidth);
+    ui->middlePadding->setMaximumWidth(middlePaddingWidth);
+    ui->leftPadding->setMaximumWidth(sidePaddingWidth);
+    ui->rightPadding->setMaximumWidth(sidePaddingWidth);
+    ui->middleUpPadding->setMaximumWidth(middlePaddingWidth);
+    //set UI icons and hide
+    //imageConfigure
+    QIcon icon = ui->imageConfigure->icon();
+    ui->imageConfigure->setIconSize(QSize(iconSideLength, iconSideLength));
+    icon.addPixmap(QPixmap(":/icons/imageConfigure.png"), QIcon::Normal);
+    ui->imageConfigure->setIcon(icon);
+    ui->imageConfigure->setHidden(true);
+    //book selector
+    icon = ui->bookSelector->icon();
+    ui->bookSelector->setIconSize(QSize(iconSideLength, iconSideLength));
+    icon.addPixmap(QPixmap(":/icons/books.png"), QIcon::Normal);
+    ui->bookSelector->setIcon(icon);
+    ui->bookSelector->setHidden(true);
+    //note selector
+    icon = ui->noteSelector->icon();
+    ui->noteSelector->setIconSize(QSize(iconSideLength, iconSideLength));
+    icon.addPixmap(QPixmap(":/icons/notes.png"), QIcon::Normal);
+    ui->noteSelector->setIcon(icon);
+    ui->noteSelector->setHidden(true);
+    //pen
+    icon = ui->penUI->icon();
+    ui->penUI->setIconSize(QSize(iconSideLength, iconSideLength));
+    icon.addPixmap(QPixmap(":/icons/pencil.png"), QIcon::Normal);
+    icon.addPixmap(QPixmap(":/icons/pencilSelected.png"), QIcon::Selected);
+    ui->penUI->setIcon(icon);
+    ui->penUI->setHidden(true);
+    //eraser
+    icon = ui->eraserUI->icon();
+    ui->eraserUI->setIconSize(QSize(iconSideLength, iconSideLength));
+    icon.addPixmap(QPixmap(":/icons/eraser.png"), QIcon::Normal);
+    icon.addPixmap(QPixmap(":/icons/eraserSelected.png"), QIcon::Selected);
+    ui->eraserUI->setIcon(icon);
+    ui->eraserUI->setHidden(true);
+    //page offset setter
+    icon = ui->pageOffsetSetter->icon();
+    ui->pageOffsetSetter->setIconSize(QSize(iconSideLength, iconSideLength));
+    icon.addPixmap(QPixmap(":/icons/offset.png"), QIcon::Normal);
+    ui->pageOffsetSetter->setIcon(icon);
+    ui->pageOffsetSetter->setHidden(true);
+    //day or night
+    icon = ui->dayOrNight->icon();
+    ui->dayOrNight->setIconSize(QSize(iconSideLength, iconSideLength));
+    icon.addPixmap(QPixmap(":/icons/moon.png"), QIcon::Selected);
+    icon.addPixmap(QPixmap(":/icons/sun.png"), QIcon::Normal);
+    ui->dayOrNight->setIcon(icon);
+    ui->dayOrNight->setHidden(true);
+    //hide bookname
+    ui->bookName->setHidden(true);
+    ui->bookName->setMinimumWidth(200);
     //testQRCode(ui->label);
     //generateQRCodes(100);
-    ui->LeftPG->setPixmap(QPixmap(":/icons/books.png"));
+    //for now, for debug...
+    showAllUIs();
+    //bookMenu
+    bookMenu = new Menu(this, 8);
+    bookMenu->setHidden(true);
+    //noteMenu
+    noteMenu = new Menu(this, 8);
+    noteMenu->setHidden(true);
+    //penStyle
+    penStyle = new ArrowWidget(this);
+    penStyle->setHidden(true);
+    //choosebookpage
+    choosebookpage = new ChooseBookPage(this);
+    choosebookpage->setHidden(true);
+    //choosenotepage
+    choosenotepage = new ChooseNotePage(this);
+    //choosenotepage->setHidden(true);
+    //setup page layout
+    ui->leftPage->setLayout(new QHBoxLayout());
+    ui->rightPage->setLayout(new QHBoxLayout());
+    QLayout *leftPGLayout = ui->leftPage->layout();
+    leftPGLayout->setMargin(0);
+    leftPGLayout->addWidget(choosebookpage);
+    leftPGLayout->addWidget(choosenotepage);
+    QLayout *rightPGLayout = ui->rightPage->layout();
+    rightPGLayout->setMargin(0);
+    //rightPGLayout->addWidget(choosebookpage);
+    //ui->leftPage->setLayout(leftPGLayout);
+    //eraserStyle
+    //eraserStyle = new ArrowWidget(this);
+    //offsetSetter
+    //offsetSetter = new ArrowWidget(this);
+    //set daymode Lighting
+    changeLightingMode();
 }
 
 MainWindow::~MainWindow()
@@ -49,6 +151,7 @@ bool MainWindow::normalDecision(QString msg){
     }
 }
 
+
 int MainWindow::InitPageNumber(){
     //check qrcode and records
 
@@ -58,7 +161,7 @@ int MainWindow::InitPageNumber(){
 }
 
 int MainWindow::SetPage(){
-    book.seekg(left_page_num * each_page_bytes, std::ios::beg);
+    /*book.seekg(left_page_num * each_page_bytes, std::ios::beg);
     char buf[12];
     book.read(buf, each_page_bytes);
     buf[each_page_bytes] = '\0';
@@ -66,7 +169,7 @@ int MainWindow::SetPage(){
     std::cout<<buf<<std::endl;
     book.read(buf, each_page_bytes);
     ui->RightPG->setText(QString::fromLocal8Bit(buf, each_page_bytes));
-    /*QImage leftpgimg, rightpgimg;
+    QImage leftpgimg, rightpgimg;
     int maxpgs = book->numPages();
     if(left_page_num + 1 < 0 || left_page_num >= maxpgs){
         //white
@@ -119,7 +222,7 @@ int MainWindow::SetPage(){
 }
 
 void MainWindow::SelectBook(){
-    //choose a book
+    /*//choose a book
     book_name = QFileDialog::getOpenFileName(this, NULL, NULL, "*.txt");
     if (book_name == NULL)
         return;
@@ -133,19 +236,19 @@ void MainWindow::SelectBook(){
     SetPage();
     if(left_page_num < 0)
         normalWarning("无可读内容");
-    return;
+    return;*/
 
 }
 
 int MainWindow::turnover(int pages){
-    left_page_num += pages;
+    /*left_page_num += pages;
     //reset page images
     SetPage();
-    return left_page_num;
+    return left_page_num;*/
 }
 
 int MainWindow::AddPageNumber(int number){
-    book.seekg(0, book.end);
+    /*book.seekg(0, book.end);
     size_t p = book.tellg();
     if(p%each_page_bytes)
         p = p/each_page_bytes + 1;
@@ -162,7 +265,7 @@ int MainWindow::AddPageNumber(int number){
             base_offset += number;
         }
     //adjust offset
-   /* int n = base_offset;
+    int n = base_offset;
     int off = number + base_offset;
     if(left_page_num + off < 0)
         base_offset = 0;
@@ -170,27 +273,68 @@ int MainWindow::AddPageNumber(int number){
 //        base_offset = book->numPages() - 2;
     else{
         base_offset += number;
-    }*/
+    }
     //change page and the offset label in ui
     ui->Offset->setText(QString::number(turnover(base_offset - n)));
     return base_offset;
+    */
 }
 
 void MainWindow::SetOffset(){
     /*if(!book)
         return;
-    //add quantity of book pages for now*/
-    AddPageNumber(book_page_num);
+    //add quantity of book pages for now
+    AddPageNumber(book_page_num);*/
 }
 
 void MainWindow::SetOffsetTmp(){
     /*if(!book)
         return;
-    //minus quantity of book pages for now*/
-    AddPageNumber(-book_page_num);
+    //minus quantity of book pages for now
+    AddPageNumber(-book_page_num);*/
 }
 
 void MainWindow::OpenImageConfigureWindow(){
     window = new ImageConfig(this);
     window->show();
+}
+
+void MainWindow::showAllUIs(){
+    ui->bookName->setHidden(false);
+    ui->dayOrNight->setHidden(false);
+    ui->bookSelector->setHidden(false);
+    ui->noteSelector->setHidden(false);
+    ui->eraserUI->setHidden(false);
+    ui->penUI->setHidden(false);
+    ui->pageOffsetSetter->setHidden(false);
+    ui->imageConfigure->setHidden(false);
+}
+
+void MainWindow::hideAllUIs(){
+    ui->bookName->setHidden(true);
+    ui->dayOrNight->setHidden(true);
+    ui->bookSelector->setHidden(true);
+    ui->noteSelector->setHidden(true);
+    ui->eraserUI->setHidden(true);
+    ui->penUI->setHidden(true);
+    ui->pageOffsetSetter->setHidden(true);
+    ui->imageConfigure->setHidden(true);
+}
+
+void MainWindow::changeLightingMode(){
+    isDayLighting = !isDayLighting;
+    if(isDayLighting){
+        ui->leftPage->setStyleSheet(dayLightStyle);
+        ui->rightPage->setStyleSheet(dayLightStyle);
+        ui->leftUIBar->setStyleSheet(dayLightStyle);
+        ui->rightUIBar->setStyleSheet(dayLightStyle);
+        ui->bookName->setStyleSheet(dayLightStyle);
+    }
+    else{
+        ui->leftPage->setStyleSheet(nightLightStyle);
+        ui->rightPage->setStyleSheet(nightLightStyle);
+        ui->leftUIBar->setStyleSheet(nightLightStyle);
+        ui->rightUIBar->setStyleSheet(nightLightStyle);
+        ui->bookName->setStyleSheet(nightLightStyle);
+    }
 }
