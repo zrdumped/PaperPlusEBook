@@ -3,6 +3,7 @@
 
 #include <iostream>
 using namespace std;
+using namespace cv;
 
 extern VideoCapture capTop;
 extern VideoCapture capBottom1;
@@ -109,6 +110,9 @@ void ImageConfig::ReactangleCalibration(){
     ui->helpInfoRect->raise();
     ShowImage(QPixmap(":/images/rectSample.jpg"), ui->helpimage);
 
+    //circle(rectMat, Point(100, 100), 50, Scalar(0, 0, 255, 255), -1);
+    //ShowImage(rectMat, rectLabel);
+    //return;
 
     //rectLabel = ui->image;
     //rectQImage = ShowImage(rectMat, rectLabel);
@@ -139,36 +143,61 @@ void ImageConfig::ReactangleCalibration(){
     rectMat = dst.clone();
     //rectQImage = ShowImage(rectMat, rectLabel);
 
-    Mat rectMat_WithPoints = rectMat.clone();
-    FindPointsInRect(rectMat, rectMat_WithPoints);
-    rectQImage = ShowImage(rectMat_WithPoints, rectLabel);
+    FindPointsInRect(rectMat);
+    rectQImage = ShowImage(rectMat, rectLabel);
 
-    //ui->image->setMouseTracking(true);
+    ui->image->setMouseTracking(true);
     //this->setMouseTracking(true);
 }
 
-void ImageConfig::mouseMoveEvent(QMouseEvent *event){
-    //获得相对于图片的坐标
-    int x = event->x() - rectLabel->x();// -xoffset;
-    int y = event->y() - rectLabel->y();// -yoffset;
-                                                                                                         //超出范围不显示信息
-    if (x < 0 || x > rectLabel->width() || y < 0 || y > rectLabel->height()) {
-        statusBar()->showMessage("");
-    }
-    //显示位置和颜色信息或灰度信息
-    else {
-        QRgb rgb = rectQImage.pixel(x, y);
-        statusBar()->showMessage(QString("Pos: (%1, %2); RGB: (%3, %4, %5)").arg
-            (QString::number(x), QString::number(y)
-                , QString::number(qBlue(rgb)), QString::number(qGreen(rgb)), QString::number(qRed(rgb))));
-        /*else
-            statusBar()->showMessage(QString("Pos: (%1, %2); GRAY: %3").arg
-            (QString::number(x), QString::number(y)
-                , QString::number(qRed(rgb))));*/
-    }
+void ImageConfig::PenCalibration(){
+    theTimer.stop();
+    ui->helpInfoPen->raise();
+    clb = RECT;
+    capTop >> penMatTop;
+
+    Rect2d roi = selectROI(penMatTop, false);
+    rectangle(penMatTop, roi, Scalar( 255, 0, 0 ), 2, 1 );
+    destroyWindow("ROI selector");
+
+    //Mat penMatTemp = penMatTop.clone();
+    cvtColor(penMatTop, rectMat, CV_RGB2RGBA);
+    //rectangle(penMatTemp, roi, Scalar( 255, 0, 0, 255 ), 2, 1 );
+    //rectQImage = ShowImage(penMatTemp, rectLabel);
+    Ptr<Tracker> tracker = TrackerBoosting::create();
+
+    //Rect2d roi = selectROI(penMatTop, false);
+    //imshow("Tracking", penMatTemp);
+    std::cout << roi << endl;
+
+    rectQImage = ShowImage(rectMat, ui->image);
+    ui->image->clear();
+    choseRect = true;
+    return;
 }
 
-void ImageConfig::FindPointsInRect(Mat src, Mat dst){
+void ImageConfig::mouseMoveEvent(QMouseEvent *event){
+//    //获得相对于图片的坐标
+//    int x = event->x() - rectLabel->x();// -xoffset;
+//    int y = event->y() - rectLabel->y();// -yoffset;
+//                                                                                                         //超出范围不显示信息
+//    if (x < 0 || x > rectLabel->width() || y < 0 || y > rectLabel->height()) {
+//        statusBar()->showMessage("");
+//    }
+//    //显示位置和颜色信息或灰度信息
+//    else {
+//        QRgb rgb = rectQImage.pixel(x, y);
+//        statusBar()->showMessage(QString("Pos: (%1, %2); RGB: (%3, %4, %5)").arg
+//            (QString::number(x), QString::number(y)
+//                , QString::number(qBlue(rgb)), QString::number(qGreen(rgb)), QString::number(qRed(rgb))));
+//        /*else
+//            statusBar()->showMessage(QString("Pos: (%1, %2); GRAY: %3").arg
+//            (QString::number(x), QString::number(y)
+//                , QString::number(qRed(rgb))));*/
+//    }
+}
+
+void ImageConfig::FindPointsInRect(Mat src){
     rectPoints = {{src.rows, src.cols}, {src.rows, 0}, {0, src.cols}, {0, 0}};
     for (int i = 2; i < src.rows - 2; i++) {
         for (int j = 2; j < src.cols - 2; j++) {
@@ -245,7 +274,24 @@ void ImageConfig::FindPointsInRect(Mat src, Mat dst){
         }
     }
     for(int  i = 0; i < 4; i++){
-        circle(dst, Point(rectPoints[i].second, rectPoints[i].first), 5, Scalar(0, 0, 255, 255), -1);
+        circle(src, Point(rectPoints[i].second, rectPoints[i].first), 10, Scalar(0, 0, 255, 255), -1);
         cout<<rectPoints[i].first <<" "<<rectPoints[i].second <<endl;
     }return;
+}
+
+void ImageConfig::confirm(){
+    ChangeButtonMode(false);
+    ui->helpInfoDefault->raise();
+}
+
+void ImageConfig::cancle(){
+    if(choseRect){
+        choseRect = false;
+        PenCalibration();
+    }
+    else{
+        ChangeButtonMode(false);
+        ui->helpInfoDefault->raise();
+        ui->helpimage->clear();
+    }
 }

@@ -245,6 +245,7 @@ int MainWindow::turnover(int pages){
     //reset page images
     SetPage();
     return left_page_num;*/
+    return 0;
 }
 
 int MainWindow::AddPageNumber(int number){
@@ -278,6 +279,7 @@ int MainWindow::AddPageNumber(int number){
     ui->Offset->setText(QString::number(turnover(base_offset - n)));
     return base_offset;
     */
+    return 0;
 }
 
 void MainWindow::SetOffset(){

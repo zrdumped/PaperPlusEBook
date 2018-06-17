@@ -1,11 +1,13 @@
-﻿#include "mainwindow.h"
+﻿#pragma once
+#include "mainwindow.h"
+#include "touchtracker.h"
 #include <QApplication>
 #include <bookmetadata.h>
 //#include "qrcode.h"
 #include <QTextCodec>
-#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <mutex>
+#include <opencv2/opencv.hpp>
 using namespace std;
 using namespace cv;
 
@@ -99,5 +101,6 @@ int main(int argc, char *argv[])
     //testOpenCV();
     //getQRcodeFromVideo();
     initCamera(4,false);
+    //TouchTracker::example();
     return a.exec();
 }

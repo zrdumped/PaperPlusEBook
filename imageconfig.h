@@ -3,6 +3,8 @@
 #define IMAGECONFIG_H
 
 #include <mycv.h>
+#include <opencv2/tracking.hpp>
+#include <opencv2/core/ocl.hpp>
 #include <QMainWindow>
 #include "QLabel"
 #include "QMouseEvent"
@@ -33,17 +35,18 @@ private:
     Ui::ImageConfig *ui;
     QLabel* rectLabel;
     QImage rectQImage;
-    Mat rectMat;
+    Mat rectMat, penMatTop;
     camera c = TOP;
     calibration clb = NONE;
     //left-up,right-up, left-down, right-down
     vector<pair<int, int>> rectPoints;
+    bool choseRect = false;
 
 
     QImage ShowImage(Mat src, QLabel* label, QImage::Format format);
     void ShowImage(QPixmap src, QLabel* label);
     void ChangeButtonMode(bool openConfirm);
-    void FindPointsInRect(Mat src, Mat dst);
+    void FindPointsInRect(Mat src);
 
     QTimer theTimer;
 
@@ -61,7 +64,10 @@ public Q_SLOTS:
         c = BOTTOM2;
     }
     void ReactangleCalibration();
+    void PenCalibration();
     void updateImage();
+    void confirm();
+    void cancle();
 };
 
 #endif // IMAGECONFIG_H

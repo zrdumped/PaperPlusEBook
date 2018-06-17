@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 #DEFINES += CWTWINDOWS
-#DEFINES += ZRWINDOWS
-DEFINES += TZYMACOSX
+DEFINES += ZRWINDOWS
+#DEFINES += TZYMACOSX
 
 DEFINES += DLL_EXPORT
 
@@ -41,7 +41,7 @@ SOURCES += \
     note.cpp \
     imageconfig.cpp \
     myifstream.cpp \
-    ../PaperPlusEBook/notemanager.cpp \
+    notemanager.cpp \
     notemetadata.cpp \
     menu.cpp \
     singlepage.cpp \
@@ -49,13 +49,13 @@ SOURCES += \
     choosenotepage.cpp \
     arrowwidget.cpp \
     emptynote.cpp \
-    ../PaperPlusEBook/emptybook.cpp \
-        touchtracker.cpp \
-        mycv.cpp \
+    emptybook.cpp \
+    touchtracker.cpp \
+    mycv.cpp \
     writedetection.cpp
 
 HEADERS += \
-        mainwindow.h    \
+    mainwindow.h    \
     txtparser.h \
     bookmetadata.h \
     bookpagedata.h \
@@ -63,7 +63,7 @@ HEADERS += \
     note.h \
     imageconfig.h   \
     myifstream.h \
-    ../PaperPlusEBook/notemanager.h \
+    notemanager.h \
     notemetadata.h \
     menu.h \
     singlepage.h \
@@ -71,21 +71,21 @@ HEADERS += \
     choosenotepage.h \
     arrowwidget.h \
     emptynote.h \
-    ../PaperPlusEBook/emptybook.h \
+    emptybook.h \
     qrcode.h \
-        touchtracker.h \
-        mycv.h \
+    touchtracker.h \
+    mycv.h \
     writedetection.h
 
 FORMS += \
-        mainwindow.ui \
+    mainwindow.ui \
     imageconfig.ui \
     menu.ui \
     singlepage.ui \
     choosebookpage.ui \
     choosenotepage.ui \
     emptynote.ui \
-    ../PaperPlusEBook/emptybook.ui
+    emptybook.ui
 
 if(contains(DEFINES, CWTWINDOWS)){
 INCLUDEPATH += \
@@ -106,13 +106,27 @@ LIBS += \
 else{
 if(contains(DEFINES, ZRWINDOWS)){
 INCLUDEPATH += \
-        C:\OpenCV\opencv\build\include \
-        C:\OpenCV\opencv\build\include\opencv  \
-        C:\OpenCV\opencv\build\include\opencv2
+        F:\HCI\opencv_build\opencv_build\include
+#        F:\HCI\opencv_build\opencv_build\include\opencv  \
+#        F:\HCI\opencv_build\opencv_build\include\opencv2
 
-LIBS += C:\OpenCV\opencv\build\x64\vc14\lib\opencv_world330.lib \
-        C:\OpenCV\opencv\build\x64\vc14\lib\opencv_world330d.lib
-
+    CONFIG(debug, debug | release) {
+        LIBS += \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_highgui341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_core341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_videoio341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgproc341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgcodecs341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_tracking341d.lib
+    } else {
+        LIBS += \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_highgui341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_core341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_videoio341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgproc341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgcodecs341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_tracking341.lib
+    }
 #INCLUDEPATH += $$PWD/poppler
 #LIBS += -L$$PWD/poppler -llibpoppler
 #LIBS += -L$$PWD/poppler -llibpoppler-qt5
