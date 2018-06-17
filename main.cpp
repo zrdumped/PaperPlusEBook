@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <bookmetadata.h>
 //#include "qrcode.h"
+#include <QTextCodec>
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <mutex>
@@ -90,6 +91,7 @@ int initCamera(int mode, bool showImg){
 
 int main(int argc, char *argv[])
 {
+
 
     QApplication a(argc, argv);
     MainWindow w;

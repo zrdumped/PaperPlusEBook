@@ -68,7 +68,7 @@ bool BookMetadata::loadMeta(QString bookpath){
     std::ifstream meta(metaFullPath.toLocal8Bit().toStdString().c_str(), std::fstream::in);
     if(!meta.is_open())
         return 0;
-    TxtParser::charandint ci;
+    charandint ci;
     ci.i = 0;
     meta.read(ci.c, 4);
     int len = ci.i;
@@ -88,7 +88,7 @@ bool BookMetadata::loadMeta(QString bookpath){
 
 void BookMetadata::storeMeta(){
     std::ofstream meta(metaFullPath.toLocal8Bit().toStdString().c_str(), std::fstream::out|std::fstream::trunc);
-    TxtParser::charandint ci;
+    charandint ci;
     std::string p = bookFullPath.toStdString();
     ci.i = p.length();
     meta.write(ci.c, 4);

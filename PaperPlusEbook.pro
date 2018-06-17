@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 #DEFINES += CWTWINDOWS
-DEFINES += ZRWINDOWS
-#DEFINES += TZYMACOSX
+#DEFINES += ZRWINDOWS
+DEFINES += TZYMACOSX
 
 DEFINES += DLL_EXPORT
 
@@ -34,34 +34,59 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        txtparser.cpp \
-        bookmetadata.cpp \
-        bookpagedata.cpp \
-        book.cpp \
-        note.cpp \
-        imageconfig.cpp \
+    txtparser.cpp \
+    bookmetadata.cpp \
+    bookpagedata.cpp \
+    book.cpp \
+    note.cpp \
+    imageconfig.cpp \
+    myifstream.cpp \
+    ../PaperPlusEBook/notemanager.cpp \
+    notemetadata.cpp \
+    menu.cpp \
+    singlepage.cpp \
+    choosebookpage.cpp \
+    choosenotepage.cpp \
+    arrowwidget.cpp \
+    emptynote.cpp \
+    ../PaperPlusEBook/emptybook.cpp \
         touchtracker.cpp \
         mycv.cpp \
     writedetection.cpp
 
-
-
 HEADERS += \
         mainwindow.h    \
-        txtparser.h \
-        bookmetadata.h \
-        bookpagedata.h \
-        book.h \
-        note.h \
-        imageconfig.h \
-        qrcode.h \
+    txtparser.h \
+    bookmetadata.h \
+    bookpagedata.h \
+    book.h \
+    note.h \
+    imageconfig.h   \
+    myifstream.h \
+    ../PaperPlusEBook/notemanager.h \
+    notemetadata.h \
+    menu.h \
+    singlepage.h \
+    choosebookpage.h \
+    choosenotepage.h \
+    arrowwidget.h \
+    emptynote.h \
+    ../PaperPlusEBook/emptybook.h \
+    qrcode.h \
         touchtracker.h \
         mycv.h \
     writedetection.h
 
 FORMS += \
         mainwindow.ui \
-        imageconfig.ui
+    imageconfig.ui \
+    menu.ui \
+    singlepage.ui \
+    choosebookpage.ui \
+    choosenotepage.ui \
+    emptynote.ui \
+    ../PaperPlusEBook/emptybook.ui
+
 if(contains(DEFINES, CWTWINDOWS)){
 INCLUDEPATH += \
         E:\develop\opencv_build\include
@@ -99,12 +124,11 @@ if(contains(DEFINES, TZYMACOSX)){
 
 INCLUDEPATH += \
             /usr/local/include \
+            /usr/local/include/opencv \
              /usr/local/include/opencv2
 
 LIBS +=         \
             -L/usr/local/lib -lopencv_imgproc -lopencv_core -lopencv_highgui -lopencv_imgcodecs \
-            -L /usr/local/Cellar/little-cms2/2.9/lib -llcms2.2  \
-            -L/usr/local/lib -lpoppler -lpoppler-cpp -lpoppler-glib  \
             -L/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources -lJPEG \
 
 
