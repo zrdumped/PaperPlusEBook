@@ -1,5 +1,4 @@
-﻿#pragma once
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include <QApplication>
 #include <bookmetadata.h>
 //#include "qrcode.h"
@@ -52,22 +51,38 @@ int getQRcodeFromVideo(){
 //mode = 3 two bottoms
 //mode = 4 all
 int initCamera(int mode, bool showImg){
-    switch(mode){
-    case 1:
-        capTop = VideoCapture(2);
-        if(!capTop.isOpened()){
-            cout<<"create camera capture error"<<endl;
-            system("pause");
-            exit(-1);
-        }
-        if(showImg){
-            Mat img;
-            capTop >> img;
-            imshow("top camera",img);
-        }
-        break;
-    default:
-        break;
+    capTop = VideoCapture(2);
+    Mat img;
+    if(!capTop.isOpened()){
+        cout<<"create camera capture error"<<endl;
+        system("pause");
+        exit(-1);
+    }
+    if(showImg){
+        capTop >> img;
+        imshow("top camera",img);
+    }
+
+    capBottom1 = VideoCapture(2);
+    if(!capBottom1.isOpened()){
+        cout<<"create camera capture error"<<endl;
+        system("pause");
+        exit(-1);
+    }
+    if(showImg){
+        capBottom1 >> img;
+        imshow("bottom camera 1",img);
+    }
+
+    capBottom2 = VideoCapture(2);
+    if(!capBottom2.isOpened()){
+        cout<<"create camera capture error"<<endl;
+        system("pause");
+        exit(-1);
+    }
+    if(showImg){
+        capBottom2 >> img;
+        imshow("bottom camera 2",img);
     }
     return 0;
 }
@@ -80,6 +95,6 @@ int main(int argc, char *argv[])
     w.show();
     //testOpenCV();
     //getQRcodeFromVideo();
-    initCamera(1,false);
+    initCamera(4,false);
     return a.exec();
 }

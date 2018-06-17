@@ -3,8 +3,8 @@
 # Project created by QtCreator 2018-05-04T18:43:03
 #
 #-------------------------------------------------
-DEFINES += CWTWINDOWS
-#DEFINES += ZRWINDOWS
+#DEFINES += CWTWINDOWS
+DEFINES += ZRWINDOWS
 #DEFINES += TZYMACOSX
 
 DEFINES += DLL_EXPORT
@@ -41,7 +41,8 @@ SOURCES += \
         note.cpp \
         imageconfig.cpp \
         touchtracker.cpp \
-        mycv.cpp
+        mycv.cpp \
+    writedetection.cpp
 
 
 
@@ -55,7 +56,8 @@ HEADERS += \
         imageconfig.h \
         qrcode.h \
         touchtracker.h \
-        mycv.h
+        mycv.h \
+    writedetection.h
 
 FORMS += \
         mainwindow.ui \
@@ -113,7 +115,8 @@ LIBS +=         \
 }
 
 RESOURCES += \
-    icons.qrc
+    icons.qrc \
+    confighelper.qrc
 
 
 
