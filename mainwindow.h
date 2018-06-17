@@ -4,6 +4,12 @@
 #include <QMainWindow>
 #include "imageconfig.h"
 #include <fstream>
+#include <QColor>
+#include <QString>
+#include <menu.h>
+#include <arrowwidget.h>
+#include <choosebookpage.h>
+#include <choosenotepage.h>
 //#include <poppler/cpp/poppler-document.h>
 //#include <poppler/cpp/poppler-page.h>
 #ifdef _WIN32
@@ -37,29 +43,42 @@ public:
     int SetPage();
     int turnover(int pages);
     int AddPageNumber(int number);
-public Q_SLOTS:
-    void OpenImageConfigureWindow();
+
 
 private:
     Ui::MainWindow *ui;
     ImageConfig *window;
+    Menu *bookMenu;
+    Menu *noteMenu;
+    ArrowWidget *penStyle;
+    ArrowWidget *eraserStyle;
+    ArrowWidget *offsetSetter;
+    ChooseBookPage *choosebookpage;
+    ChooseNotePage *choosenotepage;
     int left_page_num = 0;
     QString book_name;
-    int pg_width = 480;
-    int pg_height = 640;
-    int res_x = 72;
-    int res_y = 72;
     int base_offset = 0;
     int book_page_num = 100;
     //poppler::document *book;
     //Poppler::Document *book;
-    int each_page_bytes = 400;
+    //int each_page_bytes = 400;
     //Poppler::Document *book;
     std::fstream book;
+    int sidePaddingWidth = 80;
+    int middlePaddingWidth = 80;
+    int qzxingSideLength = 80;
+    int iconSideLength = 40;
+    QString dayLightStyle = "background-color: rgb(249, 245, 232);color: rgb(38, 38, 38);";
+    QString nightLightStyle = "background-color: rgb(11, 11, 11);color: rgb(59, 59, 59);";
+    bool isDayLighting = false;
+    void showAllUIs();
+    void hideAllUIs();
 private slots:
     void SelectBook();
     void SetOffset();
     void SetOffsetTmp();
+    void OpenImageConfigureWindow();
+    void changeLightingMode();
 };
 
 #endif // MAINWINDOW_H
