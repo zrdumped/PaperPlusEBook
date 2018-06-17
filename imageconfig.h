@@ -1,3 +1,4 @@
+#pragma once
 #ifndef IMAGECONFIG_H
 #define IMAGECONFIG_H
 
@@ -8,7 +9,9 @@
 #include "QFileDialog"
 #include <qstatusbar.h>
 #include <vector>
-#include <mutex>
+#include <thread>
+#include <QTimer>
+#include <QPainter>
 using namespace std;
 
 enum camera {TOP, BOTTOM1, BOTTOM2};
@@ -33,20 +36,20 @@ private:
     Mat rectMat;
     camera c = TOP;
     calibration clb = NONE;
-    volatile bool showImage = true;
     //left-up,right-up, left-down, right-down
     vector<pair<int, int>> rectPoints;
-    mutex myMutex;
 
 
     QImage ShowImage(Mat src, QLabel* label, QImage::Format format);
     void ShowImage(QPixmap src, QLabel* label);
-    void ShowCapture();
     void ChangeButtonMode(bool openConfirm);
     void FindPointsInRect(Mat src, Mat dst);
 
+    QTimer theTimer;
+
 protected:
     void mouseMoveEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event);
 public Q_SLOTS:
     void showCameraTop(){
         c = TOP;
@@ -58,6 +61,7 @@ public Q_SLOTS:
         c = BOTTOM2;
     }
     void ReactangleCalibration();
+    void updateImage();
 };
 
 #endif // IMAGECONFIG_H

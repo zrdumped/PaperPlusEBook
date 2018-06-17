@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -18,6 +19,7 @@
 #elif __APPLE__
    #include "poppler-qt5/qt5/src/poppler-qt5.h"
 #endif
+
 
 namespace Ui {
 class MainWindow;

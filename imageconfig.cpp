@@ -32,10 +32,12 @@ ImageConfig::ImageConfig(QMainWindow *parent) :
     QMainWindow(parent),
     ui(new Ui::ImageConfig)
 {
-    myMutex.lock();
     ui->setupUi(this);
+    connect(&theTimer, &QTimer::timeout, this, &ImageConfig::updateImage);
 
-    showImage = true;
+    //showImage = true;
+
+    theTimer.start(33);
 
     capTop >> rectMat;
     cvtColor(rectMat, rectMat, CV_RGB2RGBA);
@@ -44,38 +46,36 @@ ImageConfig::ImageConfig(QMainWindow *parent) :
 
     //ReactangleCalibration();
     //auto func = std::bind(&ImageConfig::ShowCapture, this);
-    std::thread tmp_show_cap(&ImageConfig::ShowCapture, this);
-    tmp_show_cap.detach();
-    myMutex.unlock();
+    //std::thread tmp_show_cap(&ImageConfig::ShowCapture, this);
+    //tmp_show_cap.detach();
 }
 
 ImageConfig::~ImageConfig()
 {
-    showImage = false;
     delete ui;
 }
 
-void ImageConfig::ShowCapture(){
-    myMutex.lock();
-    Mat img;
-    //int i = 0;
-    while(showImage){
-        //cout<<i++<<endl;
-        switch(c){
-        case TOP:
-            capTop >> img;
-            break;
-        case BOTTOM1:
-            capBottom1 >> img;
-            break;
-        case BOTTOM2:
-            capBottom2 >> img;
-            break;
-        }
-        cvtColor(img, img, CV_RGB2RGBA);
-        ShowImage(img, ui->image);
+void ImageConfig::paintEvent(QPaintEvent *event){
+    ShowImage(rectMat, rectLabel);
+}
+
+void ImageConfig::updateImage(){
+    switch(c){
+    case TOP:
+        capTop >> rectMat;
+        //imshow("top camera",img);
+        break;
+    case BOTTOM1:
+        capBottom1 >> rectMat;
+        //imshow("bottom camera 1",img);
+        break;
+    case BOTTOM2:
+        capBottom2 >> rectMat;
+        //imshow("bottom camera 2",img);
+        break;
     }
-    myMutex.unlock();
+    cvtColor(rectMat, rectMat, CV_RGB2RGBA);
+    this->update();
 }
 
 
@@ -91,7 +91,8 @@ void ImageConfig::ChangeButtonMode(bool openConfirm){
 }
 
 void ImageConfig::ReactangleCalibration(){
-    showImage = false;
+    theTimer.stop();
+    //ui->image->raise();
     clb = RECT;
 #ifndef TESTING
     capTop >> rectMat;
@@ -109,7 +110,7 @@ void ImageConfig::ReactangleCalibration(){
     ShowImage(QPixmap(":/images/rectSample.jpg"), ui->helpimage);
 
 
-    rectLabel = ui->image;
+    //rectLabel = ui->image;
     //rectQImage = ShowImage(rectMat, rectLabel);
     //QLabel* infoLabel = ui->info;
     //ui->ImageConfig->setMouseTracking(true);
@@ -136,13 +137,13 @@ void ImageConfig::ReactangleCalibration(){
                      2, 2, 2, 2, 2};
     MyBinaryMorphologyRough(rectMat, dst, para, 2, 2);
     rectMat = dst.clone();
-    rectQImage = ShowImage(rectMat, rectLabel);
+    //rectQImage = ShowImage(rectMat, rectLabel);
 
     Mat rectMat_WithPoints = rectMat.clone();
     FindPointsInRect(rectMat, rectMat_WithPoints);
-    ShowImage(rectMat_WithPoints, rectLabel);
+    rectQImage = ShowImage(rectMat_WithPoints, rectLabel);
 
-    ui->image->setMouseTracking(true);
+    //ui->image->setMouseTracking(true);
     //this->setMouseTracking(true);
 }
 
@@ -151,7 +152,7 @@ void ImageConfig::mouseMoveEvent(QMouseEvent *event){
     int x = event->x() - rectLabel->x();// -xoffset;
     int y = event->y() - rectLabel->y();// -yoffset;
                                                                                                          //超出范围不显示信息
-    if (x < 0 || x > rectQImage.width() || y < 0 || y > rectQImage.height()) {
+    if (x < 0 || x > rectLabel->width() || y < 0 || y > rectLabel->height()) {
         statusBar()->showMessage("");
     }
     //显示位置和颜色信息或灰度信息
