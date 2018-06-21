@@ -1,9 +1,9 @@
 ﻿#include "touchtracker.h"
 
-using namespace cv;
+
 using namespace std;
 
-#define VIDEO_IN string("E:/touch_test_realcut")
+#define VIDEO_IN string("F:/HCI/final/resources/video/touch_test_realcut")
 #define TRACKER_TYPE 0
 #define TRACK_TWO
 #define SAVE_VIDEO

@@ -20,7 +20,7 @@ BookPagedata::BookPagedata(QString bookPath){
 
 unsigned int BookPagedata::page2Offset(unsigned int p){
     pagedataFile.seekg(4 * p, std::ios_base::beg);
-    TxtParser::charandint ci;
+    charandint ci;
     ci.i = 0;
     pagedataFile.read(ci.c, 4);
     return ci.i;
@@ -31,4 +31,9 @@ bool BookPagedata::load(QString bookPath){
     QString path = f.absoluteDir().absolutePath() + '/' + f.fileName().split('.')[0] + extension;
     pagedataFile.open(path.toLocal8Bit().toStdString().c_str(), std::fstream::in);
     return pagedataFile.is_open();
+}
+
+QString BookPagedata::getPageDataFileName(QString bookPath){
+     QFileInfo f(bookPath);
+     return f.absoluteDir().absolutePath() + '/' + f.fileName().split('.')[0] + extension;
 }

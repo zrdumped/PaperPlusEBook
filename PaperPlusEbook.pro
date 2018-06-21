@@ -3,8 +3,8 @@
 # Project created by QtCreator 2018-05-04T18:43:03
 #
 #-------------------------------------------------
-DEFINES += CWTWINDOWS
-#DEFINES += ZRWINDOWS
+#DEFINES += CWTWINDOWS
+DEFINES += ZRWINDOWS
 #DEFINES += TZYMACOSX
 
 DEFINES += DLL_EXPORT
@@ -34,30 +34,59 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        txtparser.cpp \
-        bookmetadata.cpp \
-        bookpagedata.cpp \
-        book.cpp \
-        note.cpp \
-        imageconfig.cpp \
-        touchtracker.cpp
-
-
+    txtparser.cpp \
+    bookmetadata.cpp \
+    bookpagedata.cpp \
+    book.cpp \
+    note.cpp \
+    imageconfig.cpp \
+    myifstream.cpp \
+    notemanager.cpp \
+    notemetadata.cpp \
+    menu.cpp \
+    singlepage.cpp \
+    choosebookpage.cpp \
+    choosenotepage.cpp \
+    arrowwidget.cpp \
+    emptynote.cpp \
+    emptybook.cpp \
+    touchtracker.cpp \
+    mycv.cpp \
+    writedetection.cpp
 
 HEADERS += \
-        mainwindow.h    \
-        txtparser.h \
-        bookmetadata.h \
-        bookpagedata.h \
-        book.h \
-        note.h \
-        imageconfig.h \
-        qrcode.h \
-        touchtracker.h
+    mainwindow.h    \
+    txtparser.h \
+    bookmetadata.h \
+    bookpagedata.h \
+    book.h \
+    note.h \
+    imageconfig.h   \
+    myifstream.h \
+    notemanager.h \
+    notemetadata.h \
+    menu.h \
+    singlepage.h \
+    choosebookpage.h \
+    choosenotepage.h \
+    arrowwidget.h \
+    emptynote.h \
+    emptybook.h \
+    qrcode.h \
+    touchtracker.h \
+    mycv.h \
+    writedetection.h
 
 FORMS += \
-        mainwindow.ui \
-        imageconfig.ui
+    mainwindow.ui \
+    imageconfig.ui \
+    menu.ui \
+    singlepage.ui \
+    choosebookpage.ui \
+    choosenotepage.ui \
+    emptynote.ui \
+    emptybook.ui
+
 if(contains(DEFINES, CWTWINDOWS)){
     INCLUDEPATH += \
             E:\develop\opencv_build\include
@@ -85,13 +114,27 @@ if(contains(DEFINES, CWTWINDOWS)){
 else{
 if(contains(DEFINES, ZRWINDOWS)){
 INCLUDEPATH += \
-        C:\OpenCV\opencv\build\include \
-        C:\OpenCV\opencv\build\include\opencv  \
-        C:\OpenCV\opencv\build\include\opencv2
+        F:\HCI\opencv_build\opencv_build\include
+#        F:\HCI\opencv_build\opencv_build\include\opencv  \
+#        F:\HCI\opencv_build\opencv_build\include\opencv2
 
-LIBS += C:\OpenCV\opencv\build\x64\vc14\lib\opencv_world330.lib \
-        C:\OpenCV\opencv\build\x64\vc14\lib\opencv_world330d.lib
-
+    CONFIG(debug, debug | release) {
+        LIBS += \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_highgui341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_core341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_videoio341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgproc341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgcodecs341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_tracking341d.lib
+    } else {
+        LIBS += \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_highgui341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_core341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_videoio341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgproc341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgcodecs341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_tracking341.lib
+    }
 #INCLUDEPATH += $$PWD/poppler
 #LIBS += -L$$PWD/poppler -llibpoppler
 #LIBS += -L$$PWD/poppler -llibpoppler-qt5
@@ -103,12 +146,11 @@ if(contains(DEFINES, TZYMACOSX)){
 
 INCLUDEPATH += \
             /usr/local/include \
+            /usr/local/include/opencv \
              /usr/local/include/opencv2
 
 LIBS +=         \
             -L/usr/local/lib -lopencv_imgproc -lopencv_core -lopencv_highgui -lopencv_imgcodecs \
-            -L /usr/local/Cellar/little-cms2/2.9/lib -llcms2.2  \
-            -L/usr/local/lib -lpoppler -lpoppler-cpp -lpoppler-glib  \
             -L/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources -lJPEG \
 
 
@@ -119,7 +161,8 @@ LIBS +=         \
 }
 
 RESOURCES += \
-    icons.qrc
+    icons.qrc \
+    confighelper.qrc
 
 
 

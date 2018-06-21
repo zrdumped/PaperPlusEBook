@@ -1,9 +1,26 @@
 <RCC>
     <qresource prefix="/">
         <file>icons/books.png</file>
+        <file>icons/eraser.png</file>
+        <file>icons/eraserSelected.png</file>
+        <file>icons/first.png</file>
+        <file>icons/firstgrey.png</file>
         <file>icons/last.png</file>
         <file>icons/lastgrey.png</file>
+        <file>icons/moon.png</file>
         <file>icons/next.png</file>
         <file>icons/nextgrey.png</file>
+        <file>icons/pencil.png</file>
+        <file>icons/pencilSelected.png</file>
+        <file>icons/prev.png</file>
+        <file>icons/prevgrey.png</file>
+        <file>icons/sun.png</file>
+        <file>icons/offset.png</file>
+        <file>icons/notes.png</file>
+        <file>icons/imageConfigure.png</file>
+        <file>icons/booksLabel.png</file>
+        <file>icons/notesLabel.png</file>
+        <file>icons/plus.png</file>
+        <file>icons/return.png</file>
     </qresource>
 </RCC>
