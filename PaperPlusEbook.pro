@@ -59,20 +59,28 @@ FORMS += \
         mainwindow.ui \
         imageconfig.ui
 if(contains(DEFINES, CWTWINDOWS)){
-INCLUDEPATH += \
-        E:\develop\opencv_build\include
+    INCLUDEPATH += \
+            E:\develop\opencv_build\include
 
-LIBS += \
-        #-LE:/develop/opencv/build/x64/vc15/lib/ \
-        #-lopencv_world341 \
-        #-lopencv_world341d \
-        -LE:\develop\opencv_build\lib\
-        -lopencv_highgui341 \
-        -lopencv_core341 \
-        -lopencv_videoio341 \
-        -lopencv_imgproc341  \
-        -lopencv_imgcodecs341 \
-        -lopencv_tracking341 \
+    CONFIG(debug, debug | release) {
+        LIBS += \
+                -LE:\develop\opencv_build\lib\
+                -lopencv_highgui341d \
+                -lopencv_core341d \
+                -lopencv_videoio341d \
+                -lopencv_imgproc341d  \
+                -lopencv_imgcodecs341d \
+                -lopencv_tracking341d \
+    } else {
+        LIBS += \
+                -LE:\develop\opencv_build\lib\
+                -lopencv_highgui341 \
+                -lopencv_core341 \
+                -lopencv_videoio341 \
+                -lopencv_imgproc341  \
+                -lopencv_imgcodecs341 \
+                -lopencv_tracking341 \
+    }
 }
 else{
 if(contains(DEFINES, ZRWINDOWS)){
