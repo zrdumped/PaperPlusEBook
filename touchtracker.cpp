@@ -180,16 +180,16 @@ Rect2d TouchTracker::getRectFromDisk()
 {
     Rect2d boxp;
     QSettings *config = new QSettings(QString::fromStdString(INIT_PATH) + "ppeb_config.ini", QSettings::IniFormat);
-    boxp.x = config->value(handle + "/x").toInt();
-    boxp.y = config->value(handle + "/y").toInt();
-    boxp.width = config->value(handle + "/width").toInt();
-    boxp.height = config->value(handle + "/height").toInt();
+    boxp.x = config->value(QString::fromStdString(handle + "/x")).toInt();
+    boxp.y = config->value(QString::fromStdString(handle + "/y")).toInt();
+    boxp.width = config->value(QString::fromStdString(handle + "/width")).toInt();
+    boxp.height = config->value(QString::fromStdString(handle + "/height")).toInt();
     return boxp;
 }
 
 void TouchTracker::initTouchFromDisk()
 {
-    Mat frame = imread(INIT_PATH + "ppeb_track_" + hanle + ".png");
+    Mat frame = imread(INIT_PATH + "ppeb_track_" + handle + ".png");
     if (frame.empty()) {
         cout << "initTouchFromDisk: init image doesn't exist" << endl;
         exit(-1);
@@ -206,7 +206,7 @@ void TouchTracker::initTouchIntoDisk(Mat frame)
 
     imwrite(INIT_PATH + "ppeb_track_" + handle + ".png", frame);
     QSettings *config = new QSettings(QString::fromStdString(INIT_PATH) + "ppeb_config.ini", QSettings::IniFormat);
-    config->beginGroup(handle);
+    config->beginGroup(QString::fromStdString(handle));
     config->setValue("x", boxp.x);
     config->setValue("y", boxp.y);
     config->setValue("width", boxp.width);

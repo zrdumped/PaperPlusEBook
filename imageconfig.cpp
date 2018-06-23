@@ -9,7 +9,7 @@ extern VideoCapture capTop;
 extern VideoCapture capBottom1;
 extern VideoCapture capBottom2;
 
-#define TESTING
+//#define TESTING
 
 
 QImage ImageConfig::ShowImage(Mat src, QLabel* label, QImage::Format format = QImage::Format_ARGB32) {
@@ -40,10 +40,10 @@ ImageConfig::ImageConfig(QMainWindow *parent) :
 
     theTimer.start(33);
 
-    QString fileName = QFileDialog::getOpenFileName(this, NULL, NULL, "*.bmp *.jpeg *.png *.jpeg 2000 *.gif *.jpg *.mp4");
-       if (fileName == NULL) return;
-       rectMat = imread(fileName.toStdString());
-    //capTop >> rectMat;
+    //QString fileName = QFileDialog::getOpenFileName(this, NULL, NULL, "*.bmp *.jpeg *.png *.jpeg 2000 *.gif *.jpg *.mp4");
+      // if (fileName == NULL) return;
+       //rectMat = imread(fileName.toStdString());
+    capTop >> rectMat;
     cvtColor(rectMat, rectMat, CV_RGB2RGBA);
     rectLabel = ui->image;
     rectQImage = ShowImage(rectMat, rectLabel);
@@ -106,6 +106,8 @@ void ImageConfig::ReactangleCalibration(){
     rectMat = imread(fileName.toStdString());
 #endif
     cvtColor(rectMat, rectMat, CV_RGB2RGBA);
+
+    ChangeButtonMode(true);
 
     //Mat rectSample = imread(":/images/rectSample.jpg");
     //ui->helpimage->setPixmap(QPixmap(":/images/rectSample.jpg"));
@@ -175,6 +177,7 @@ void ImageConfig::ReactangleCalibration(){
 }
 
 void ImageConfig::PenCalibration(){
+        ChangeButtonMode(true);
     theTimer.stop();
     ui->helpInfoPen->raise();
     clb = RECT;
@@ -389,6 +392,10 @@ void ImageConfig::FindPointsInRect(Mat src){
 void ImageConfig::confirm(){
     ChangeButtonMode(false);
     ui->helpInfoDefault->raise();
+
+    capTop >> rectMat;
+    cvtColor(rectMat, rectMat, CV_RGB2RGBA);
+    theTimer.start(33);
 }
 
 void ImageConfig::cancle(){

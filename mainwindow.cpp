@@ -8,6 +8,7 @@
 #include <QStackedLayout>
 #include <QFileDialog>
 #include <QLabel>
+#include <QFrame>
 /*
  * Menu: QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);} minimum height: 40px
  */
@@ -59,6 +60,8 @@ MainWindow::MainWindow(QWidget *parent) :
     icon.addPixmap(QPixmap(":/icons/pencil.png"), QIcon::Normal, QIcon::Off);
     icon.addPixmap(QPixmap(":/icons/pencilSelected.png"), QIcon::Normal, QIcon::On);
     ui->penUI->setIcon(icon);
+    ui->penUI->setCheckable(true);
+    ui->penUI->setChecked(false);
     ui->penUI->setHidden(true);
     //eraser
     icon = ui->eraserUI->icon();
@@ -66,6 +69,8 @@ MainWindow::MainWindow(QWidget *parent) :
     icon.addPixmap(QPixmap(":/icons/eraser.png"), QIcon::Normal, QIcon::Off);
     icon.addPixmap(QPixmap(":/icons/eraserSelected.png"), QIcon::Normal, QIcon::On);
     ui->eraserUI->setIcon(icon);
+    ui->eraserUI->setCheckable(true);
+    ui->eraserUI->setChecked(false);
     ui->eraserUI->setHidden(true);
     //page offset setter
     icon = ui->pageOffsetSetter->icon();
@@ -87,7 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //testQRCode(ui->label);
     //generateQRCodes(100);
     //for now, for debug...
-    showAllUIs();
+    //showAllUIs();
     //bookMenu
     bookMenu = new Menu(this, entryPerPage);
     //noteMenu
@@ -180,6 +185,7 @@ MainWindow::MainWindow(QWidget *parent) :
     leftPageStack->setCurrentWidget(choosebookpage);
     //load book menu
     loadAllBookEntries();
+    this->showMaximized();
 }
 
 MainWindow::~MainWindow()
@@ -229,6 +235,12 @@ void MainWindow::createNewBook(){
 }
 
 void MainWindow::OpenImageConfigureWindow(){
+    QFrame *frame = new QFrame(this);
+    frame->setGeometry(160,160,this->size().height(),this->size().width()-320);
+    frame->setMinimumHeight(this->size().height());
+    frame->setMinimumWidth(this->size().width()-320);
+    frame->setStyleSheet("background-color:rgb(255,255,255,255);");
+    frame->setHidden(false);
     window = new ImageConfig(this);
     window->show();
 }
@@ -365,7 +377,7 @@ void MainWindow::createNewNote(){
     btn->setStyleSheet("QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);}");
     btn->setMinimumHeight(40);
     btn->setMaximumHeight(40);
-    QRect rect = noteMenu->getNextGeometry(btn, this);
+   // QRect rect = noteMenu->getNextGeometry(btn, this);
     if(noteMenu->getCount() % entryPerPage > (entryPerPage / 2)){
         noteentryeditupper->reset();
         leaveReading("", noteentryeditupper);
@@ -410,7 +422,9 @@ void MainWindow::showBookInfoModal(){
         bookentrymodal->setName(book->getName());
         bookentrymodal->setTime(meta.getLastReadTime());
         bookentrymodal->setPage(meta.getLastReadPage(), meta.getBookPageCount());
-        bookentrymodal->setGeometry(sender->mapTo(this, this->pos()).x() - margin, sender->mapTo(this, this->pos()).y() - margin, sender->width() + margin, bookentrymodal->height());
+        std::cout<<"pos:"<<sender->mapTo(this, sender->pos()).y()<<std::endl;
+        bookentrymodal->setGeometry(sender->mapTo(this, sender->pos()).x() - margin, sender->mapTo(this, sender->pos()).y() - 100-margin, sender->width() + margin, bookentrymodal->height());
+       std::cout<<bookentrymodal->y()<<std::endl;
         QString sample = bookmanager.fetchLastReadFromBook(book->getName(), meta.getLastReadPage());
         sample = sample.left(sampleNumber);
         sample += "......";
@@ -422,7 +436,7 @@ void MainWindow::showBookInfoModal(){
         bookentryuppermodal->setName(book->getName());
         bookentryuppermodal->setTime(meta.getLastReadTime());
         bookentryuppermodal->setPage(meta.getLastReadPage(), meta.getBookPageCount());
-        bookentrymodal->setGeometry(sender->mapTo(this, this->pos()).x() - margin, sender->mapTo(this, this->pos()).y() + bookentrymodal->height() - margin, sender->width() + margin, bookentrymodal->height());
+        bookentrymodal->setGeometry(sender->mapTo(this, sender->pos()).x() - margin, sender->mapTo(this, sender->pos()).y() + bookentrymodal->height() - margin, sender->width() + margin, bookentrymodal->height());
         leaveReading(book->getName(), bookentryuppermodal);
     }
 }
@@ -434,34 +448,37 @@ void MainWindow::showNoteInfoModal(){
         noteentrymodal->setName(note.getNoteName());
         QString intro = note.getIntroduction();
         if(intro == "")
-            intro = tr("无");
+            intro = tr("None");
         noteentrymodal->setIntroduction(intro);
         noteentrymodal->setTime(note.getLastModifiedTime());
-        noteentrymodal->setGeometry(sender->mapTo(this, this->pos()).x() - margin, sender->mapTo(this, this->pos()).y() - margin, sender->width() + margin, noteentrymodal->height());
+        noteentrymodal->setGeometry(sender->mapTo(this, sender->pos()).x() - margin, sender->mapTo(this, sender->pos()).y() - margin, sender->width() + margin, noteentrymodal->height());
         leaveReading(note.getNoteName(), noteentrymodal);
     }
     else{
         noteentryuppermodal->setName(note.getNoteName());
         noteentryuppermodal->setIntroduction(note.getIntroduction());
         noteentryuppermodal->setTime(note.getLastModifiedTime());
-        noteentrymodal->setGeometry(sender->mapTo(this, this->pos()).x() - margin, sender->mapTo(this, this->pos()).y() + noteentrymodal->height() - margin, sender->width() + margin, noteentrymodal->height());
+        noteentrymodal->setGeometry(sender->mapTo(this, sender->pos()).x() - margin, sender->mapTo(this, sender->pos()).y() + noteentrymodal->height() - margin, sender->width() + margin, noteentrymodal->height());
         leaveReading(note.getNoteName(), noteentryuppermodal);
     }
 }
 
 void MainWindow::backToSelectBook(){
+    hideAllUIs();
     bookmanager.closeBook();
     leftPageStack->setCurrentWidget(choosebookpage);
     rightPageStack->setCurrentWidget(bookMenu);
 }
 
 void MainWindow::backToSelectNote(){
+    hideAllUIs();
     leftPageStack->setCurrentWidget(choosenotepage);
     rightPageStack->setCurrentWidget(noteMenu);
 }
 
 void MainWindow::startReading(){
     //leftPage->setContent();
+    showAllUIs();
     int p = bookmanager.getLastRead();
     baseOffset = p;
     p += leftPageNumPhysical - 1;

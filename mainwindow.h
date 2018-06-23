@@ -85,7 +85,7 @@ private:
     int sampleNumber = 100;
     std::fstream book;
     int entryPerPage = 8;
-    int sidePaddingWidth = 80;
+    int sidePaddingWidth = 140;
     int middlePaddingWidth = 80;
     int qzxingSideLength = 80;
     int iconSideLength = 40;

@@ -16,10 +16,10 @@ Book::~Book(){
 
 int Book::newBook(QString bookPath, QString bookName){
     QDir workDir(QCoreApplication::applicationDirPath());
-    QDir bookDir(bookName);
+    QDir bookDir(workDir.absoluteFilePath(bookName));
     if(bookDir.exists())
         return -1;
-    int r = workDir.mkdir(bookName);
+    int r = workDir.mkdir(bookDir.absolutePath());
     if(!r)
         return -2;
     QString bookFileName = QFileInfo(bookPath).fileName();
@@ -42,6 +42,7 @@ void Book::loadBook(QString bookName){
 
 void Book::openBook(){
     pagemeta.load(meta.getBookName());
+    std::cout<<meta.getBookPath().toLocal8Bit().toStdString()<<std::endl;
     bookFStream.open(meta.getBookPath().toLocal8Bit().toStdString().c_str());
 }
 

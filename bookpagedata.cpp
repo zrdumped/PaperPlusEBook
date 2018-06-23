@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <iostream>
+#include <QCoreApplication>
 BookPagedata::BookPagedata()
 {
 
@@ -22,7 +23,9 @@ unsigned int BookPagedata::page2Offset(int p){
 
 bool BookPagedata::load(QString bookPath){
     unload();
-    QFileInfo f(bookPath);
+    QDir workDir(QCoreApplication::applicationDirPath());
+
+    QFileInfo f(workDir.absoluteFilePath(bookPath));
     QString path = f.absoluteFilePath() + '/' + f.fileName() + extension;
     pagedataFile.open(path.toLocal8Bit().toStdString().c_str(), std::fstream::in);
     return pagedataFile.is_open();

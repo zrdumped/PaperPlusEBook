@@ -52,6 +52,11 @@
        <height>0</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -94,6 +99,11 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">QPushButton{background-color: rgb(179, 208, 255); border-radius: 15px;  border: 1px rgb(179, 208, 255);}</string>
         </property>
@@ -107,6 +117,11 @@
       </item>
       <item>
        <widget class="QFrame" name="frame_3">
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -120,6 +135,11 @@
    </item>
    <item row="1" column="0">
     <widget class="QFrame" name="frame">
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -131,7 +151,7 @@
        <widget class="QLabel" name="notesLabel">
         <property name="font">
          <font>
-          <pointsize>18</pointsize>
+          <pointsize>9</pointsize>
          </font>
         </property>
         <property name="styleSheet">
@@ -161,7 +181,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>18</pointsize>
+          <pointsize>9</pointsize>
          </font>
         </property>
         <property name="styleSheet">
@@ -188,7 +208,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>18</pointsize>
+          <pointsize>9</pointsize>
          </font>
         </property>
         <property name="text">

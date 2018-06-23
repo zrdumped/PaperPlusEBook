@@ -34,6 +34,11 @@
    </property>
    <item>
     <widget class="QFrame" name="entryTable">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -63,6 +68,11 @@
        <height>80</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -72,6 +82,11 @@
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QPushButton" name="first">
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -82,6 +97,11 @@
       </item>
       <item>
        <widget class="QPushButton" name="prev">
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -92,6 +112,11 @@
       </item>
       <item>
        <widget class="QLabel" name="currentPage">
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -99,6 +124,11 @@
       </item>
       <item>
        <widget class="QPushButton" name="next">
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -109,6 +139,11 @@
       </item>
       <item>
        <widget class="QPushButton" name="last">
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>

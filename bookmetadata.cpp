@@ -5,6 +5,7 @@
 #include <fstream>
 #include <txtparser.h>
 #include <iostream>
+#include <QCoreApplication>
 BookMetadata::BookMetadata()
 {
     bookName = "";
@@ -64,7 +65,8 @@ void BookMetadata::setLastReadTime(QDateTime dt){
 }
 
 bool BookMetadata::loadMeta(QString bookpath){
-    QFileInfo f(bookpath);
+    QDir workDir(QCoreApplication::applicationDirPath());
+    QFileInfo f(workDir.absoluteFilePath(bookpath));
     bookName = bookpath;
     metaFullPath = f.absoluteFilePath() + "/" + bookName + extension;
     std::ifstream meta(metaFullPath.toLocal8Bit().toStdString().c_str(), std::fstream::in);
@@ -77,6 +79,7 @@ bool BookMetadata::loadMeta(QString bookpath){
     char *p = (char *)malloc(len);
     meta.read(p, len);
     bookFullPath = QString::fromStdString(std::string(p, len));
+    std::cout<<"bookfullpatrh: "<<bookFullPath.toStdString()<<std::endl;
     free(p);
     meta.read(ci.c, 4);
     bookPageCount = ci.i;

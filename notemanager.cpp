@@ -2,25 +2,30 @@
 #include <notemetadata.h>
 #include <QDir>
 #include <QFileInfo>
+#include <QCoreApplication>
 NoteManager::NoteManager()
 {
 
 }
 
 void NoteManager::loadAllNotes(QString bookname){
-    QDir book(bookname);
+    QDir workDir(QCoreApplication::applicationDirPath());
+
+    QDir book(workDir.absoluteFilePath(bookname));
     bookName = bookname;
     book.setFilter(QDir::Dirs|QDir::NoDotAndDotDot);
     QFileInfoList notes = book.entryInfoList();
     for(auto note : notes){
-        noteMap[note.fileName()] = Note(book.absolutePath(), note.fileName());
+        noteMap[note.fileName()] = Note(workDir.absoluteFilePath(bookname), note.fileName());
     }
 }
 
 int NoteManager::addNote(QString noteName, QString introduction){
     if(noteMap.find(noteName) != noteMap.end())
         return -1;
-    QDir book(bookName);
+    QDir workDir(QCoreApplication::applicationDirPath());
+
+    QDir book(workDir.absoluteFilePath(bookName));
     book.mkdir(noteName);
     NoteMetadata nmeta(book.absoluteFilePath(noteName));
     nmeta.setIntroduction(introduction);

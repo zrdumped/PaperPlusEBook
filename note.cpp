@@ -1,5 +1,5 @@
 #include "note.h"
-
+#include <iostream>
 Note::Note()
 {
 
@@ -34,6 +34,7 @@ QImage Note::getNotePage(int page){
 void Note::storeNotePage(QImage &img, int page){
     QString imgName = QString::number(page) + extension;
     img.save(noteDir.absoluteFilePath(imgName));
+    std::cout<<"savepng"<<noteDir.absoluteFilePath(imgName).toStdString()<<std::endl;
     notemetadata.setLastModifiedTime(QFileInfo(noteDir.absolutePath()).lastModified());
 }
 

@@ -51,6 +51,7 @@ void NoteMetadata::setIntroduction(QString intro){
 }
 
 void NoteMetadata::storeMeta(){
+    std::cout<<"notepath: "<<notePath.toStdString()<<std::endl;
     QDir d(notePath);
     QFileInfo f(notePath);
     QString metaname = f.fileName()+extension;

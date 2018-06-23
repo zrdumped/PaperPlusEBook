@@ -26,7 +26,7 @@ void bookEntryModal::setTime(QDateTime time){
 }
 
 void bookEntryModal::setPage(int lastIndex, int total){
-    ui->pageinfo->setText(tr("第%1/%2页").arg(QString::number(lastIndex + 1), QString::number(total)));
+    ui->pageinfo->setText(tr("Page %1/%2").arg(QString::number(lastIndex + 1), QString::number(total)));
 }
 
 void bookEntryModal::setLastRead(QString content){
