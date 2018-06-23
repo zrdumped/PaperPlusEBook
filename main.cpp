@@ -1,10 +1,13 @@
-﻿#include "mainwindow.h"
+﻿#pragma once
+#include "mainwindow.h"
+#include "touchtracker.h"
 #include <QApplication>
 #include <bookmetadata.h>
 //#include "qrcode.h"
 #include <QTextCodec>
-#include <opencv2/opencv.hpp>
 #include <iostream>
+#include <mutex>
+#include <opencv2/opencv.hpp>
 using namespace std;
 using namespace cv;
 
@@ -52,7 +55,7 @@ int getQRcodeFromVideo(){
 //mode = 3 two bottoms
 //mode = 4 all
 int initCamera(int mode, bool showImg){
-    capTop = VideoCapture(2);
+    capTop = VideoCapture(1);
     Mat img;
     if(!capTop.isOpened()){
         cout<<"create camera capture error"<<endl;
@@ -97,6 +100,7 @@ int main(int argc, char *argv[])
     w.show();
     //testOpenCV();
     //getQRcodeFromVideo();
-    //initCamera(4,false);
+    initCamera(4,false);
+    //TouchTracker::example();
     return a.exec();
 }

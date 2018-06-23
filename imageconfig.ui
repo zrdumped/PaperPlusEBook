@@ -211,10 +211,36 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="helpInfoPen">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>10</y>
+     <width>320</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;提示信息——标定笔&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;请在左图用鼠标点击拖拽选出笔尖的位置&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;合理的笔尖标记请参考下图&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;·&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;点击确定确认选矿，取消重新选择或取消标定&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
   <zorder>image</zorder>
   <zorder>widget</zorder>
   <zorder>helpimage</zorder>
   <zorder>helpInfoRect</zorder>
+  <zorder>helpInfoPen</zorder>
   <zorder>helpInfoDefault</zorder>
  </widget>
  <resources/>
@@ -283,11 +309,79 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_6</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageConfig</receiver>
+   <slot>PenCalibration()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>710</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>657</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_7</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageConfig</receiver>
+   <slot>confirm()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>690</x>
+     <y>440</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>657</x>
+     <y>453</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_8</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageConfig</receiver>
+   <slot>cancle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>683</x>
+     <y>472</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>655</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>clicked()</signal>
+   <receiver>ImageConfig</receiver>
+   <slot>test()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>736</x>
+     <y>153</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>653</x>
+     <y>317</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showCameraTop()</slot>
   <slot>showCameraBottom1()</slot>
   <slot>showCameraBottom2()</slot>
   <slot>ReactangleCalibration()</slot>
+  <slot>PenCalibration()</slot>
+  <slot>confirm()</slot>
+  <slot>cancle()</slot>
+  <slot>test()</slot>
  </slots>
 </ui>
