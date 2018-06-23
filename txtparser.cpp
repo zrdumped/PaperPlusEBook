@@ -18,6 +18,9 @@ int TxtParser::ParseFile(QString filename, QString metafilename, int charPerLine
     std::string fname = filename.toLocal8Bit().toStdString();
     std::string metaname = metafilename.toLocal8Bit().toStdString();
     MyIfstream sourceFile(fname.c_str());
+    if(!sourceFile.is_open()){
+        return 0;
+    }
     std::ofstream metaFile(metaname.c_str(), std::fstream::out | std::fstream::trunc);
     QChar c;
     int charPerLineCounter = 0;
@@ -26,6 +29,7 @@ int TxtParser::ParseFile(QString filename, QString metafilename, int charPerLine
     int pageCounter = 0;
     charandint ci;
     while(sourceFile.read(&c, 1)){
+        //std::cout<<"c: "<<QString(c).toStdString()<<" pos: "<<sourceFile.tellg()<<std::endl;
         //if '\n', add a new line
         if(c == '\n'){
             linePerPageCounter ++;
@@ -35,10 +39,11 @@ int TxtParser::ParseFile(QString filename, QString metafilename, int charPerLine
                 ci.i = sourceFile.tellg();
                 metaFile.write(ci.c, 4);
                 pageCounter ++;
+                //std::cout<<"page"<<pageCounter<<" ok(\\n) offset: "<<ci.i<<std::endl;
             }
         }
         //if c is ' ', update the position of the last word we met
-        else if(c == ' '){
+        else if(c.isSpace()){
             lastWordPos = sourceFile.tellg();
             charPerLineCounter ++;
             if(charPerLineCounter == charPerLine){
@@ -51,9 +56,10 @@ int TxtParser::ParseFile(QString filename, QString metafilename, int charPerLine
                 ci.i = sourceFile.tellg();
                 metaFile.write(ci.c, 4);
                 pageCounter ++;
+                //std::cout<<"page"<<pageCounter<<" ok(' ') offset: "<<ci.i<<std::endl;
             }
         }
-        else if(CheckPunctuation(c)){
+        else if(c.isPunct()){
             //if a punctuation is the front of a line, the last word in the last line should be moved to the current line
             if(charPerLineCounter == 0){
                 //if cross pages, change the position of last page
@@ -81,11 +87,12 @@ int TxtParser::ParseFile(QString filename, QString metafilename, int charPerLine
                     ci.i = sourceFile.tellg();
                     metaFile.write(ci.c, 4);
                     pageCounter ++;
+                    //std::cout<<"page"<<pageCounter<<" ok('punc') offset: "<<ci.i<<std::endl;
                 }
             }
         }
-        //normal characters
-        else {
+        //english word characters
+        else if(c.isLetter()){
             charPerLineCounter ++;
             if(charPerLineCounter == charPerLine){
                 charPerLineCounter = 0;
@@ -98,6 +105,23 @@ int TxtParser::ParseFile(QString filename, QString metafilename, int charPerLine
                 ci.i = lastWordPos;
                 metaFile.write(ci.c, 4);
                 pageCounter ++;
+                //std::cout<<"page"<<pageCounter<<" ok(other) offset: "<<ci.i<<std::endl;
+            }
+        }
+        //normal characters
+        else {
+            charPerLineCounter ++;
+            if(charPerLineCounter == charPerLine){
+                charPerLineCounter = 0;
+                linePerPageCounter ++;
+            }
+            if(linePerPageCounter == linePerPage){
+                linePerPageCounter = 0;
+                metaFile.seekp(pageCounter * 4, std::ios_base::beg);
+                ci.i = lastWordPos;
+                metaFile.write(ci.c, 4);
+                pageCounter ++;
+                //std::cout<<"page"<<pageCounter<<" ok(other) offset: "<<ci.i<<std::endl;
             }
         }
     }
@@ -106,15 +130,15 @@ int TxtParser::ParseFile(QString filename, QString metafilename, int charPerLine
         ci.i = sourceFile.tellg();
         metaFile.write(ci.c, 4);
         pageCounter ++;
+        //std::cout<<"page"<<pageCounter<<" ok(rest) offset: "<<ci.i<<std::endl;
     }
+    metaFile.seekp(pageCounter * 4, std::ios_base::beg);
+    sourceFile.clear();
+    ci.i = sourceFile.tellend();
+    metaFile.write(ci.c, 4);
     sourceFile.close();
     metaFile.flush();
     metaFile.close();
     return pageCounter;
-}
-
-bool TxtParser::CheckPunctuation(QChar qc){
-    char c = qc.toLatin1();
-    return (c > 32 && c < 48) || (c > 57 && c < 65) || (c > 90 && c < 97) || (c > 123 && c < 125);
 }
 

@@ -1,6 +1,6 @@
 #include "imageconfig.h"
 #include "ui_imageconfig.h"
-
+#include <thread>
 #include <iostream>
 using namespace std;
 
@@ -37,7 +37,10 @@ ImageConfig::ImageConfig(QMainWindow *parent) :
 
     showImage = true;
 
-    capTop >> rectMat;
+    QString fileName = QFileDialog::getOpenFileName(this, NULL, NULL, "*.bmp *.jpeg *.png *.jpeg 2000 *.gif *.jpg *.mp4");
+       if (fileName == NULL) return;
+       rectMat = imread(fileName.toStdString());
+    //capTop >> rectMat;
     cvtColor(rectMat, rectMat, CV_RGB2RGBA);
     rectLabel = ui->image;
     rectQImage = ShowImage(rectMat, rectLabel);
@@ -57,19 +60,28 @@ ImageConfig::~ImageConfig()
 
 void ImageConfig::ShowCapture(){
     myMutex.lock();
-    Mat img;
+    Mat img;QString fileName;
     //int i = 0;
     while(showImage){
         //cout<<i++<<endl;
         switch(c){
         case TOP:
-            capTop >> img;
+            fileName = QFileDialog::getOpenFileName(this, NULL, NULL, "*.bmp *.jpeg *.png *.jpeg 2000 *.gif *.jpg *.mp4");
+               if (fileName == NULL) return;
+               img = imread(fileName.toStdString());
+            //capTop >> img;
             break;
         case BOTTOM1:
-            capBottom1 >> img;
+            fileName = QFileDialog::getOpenFileName(this, NULL, NULL, "*.bmp *.jpeg *.png *.jpeg 2000 *.gif *.jpg *.mp4");
+               if (fileName == NULL) return;
+               img = imread(fileName.toStdString());
+            //capBottom1 >> img;
             break;
         case BOTTOM2:
-            capBottom2 >> img;
+            fileName = QFileDialog::getOpenFileName(this, NULL, NULL, "*.bmp *.jpeg *.png *.jpeg 2000 *.gif *.jpg *.mp4");
+               if (fileName == NULL) return;
+               img = imread(fileName.toStdString());
+            //capBottom2 >> img;
             break;
         }
         cvtColor(img, img, CV_RGB2RGBA);

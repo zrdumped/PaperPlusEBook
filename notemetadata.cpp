@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <txtparser.h>
+#include <iostream>
 NoteMetadata::NoteMetadata()
 {
 
@@ -29,6 +30,7 @@ bool NoteMetadata::loadMeta(QString notepath){
     introduction = QString::fromStdString(std::string(p, len));
     free(p);
     lastModifiedTime = f.lastModified();
+    meta.close();
     return 1;
 }
 
@@ -58,4 +60,6 @@ void NoteMetadata::storeMeta(){
     ci.i = p.length();
     meta.write(ci.c, 4);
     meta.write(p.c_str(), ci.i);
+    meta.flush();
+    meta.close();
 }

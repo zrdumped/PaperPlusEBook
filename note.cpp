@@ -36,3 +36,11 @@ void Note::storeNotePage(QImage &img, int page){
     img.save(noteDir.absoluteFilePath(imgName));
     notemetadata.setLastModifiedTime(QFileInfo(noteDir.absolutePath()).lastModified());
 }
+
+QString Note::getIntroduction(){
+    return notemetadata.getIntroduction();
+}
+
+QDateTime Note::getLastModifiedTime(){
+    return notemetadata.getLastModifiedTime();
+}

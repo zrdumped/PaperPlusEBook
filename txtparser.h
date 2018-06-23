@@ -12,8 +12,7 @@ public:
         ANSI = 0, UTF_16, UTF_8, UTF_16_BIG_ENDIAN
     };
     TxtParser();
-    static int ParseFile(QString filename, QString metafilename, int charPerLine = 40, int linePerPage = 40);
-    static bool CheckPunctuation(QChar c);
+    static int ParseFile(QString filename, QString metafilename, int charPerLine = 85, int linePerPage = 20);
 };
 
 #endif // TXTPARSER_H

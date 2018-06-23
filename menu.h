@@ -16,8 +16,10 @@ public:
     explicit Menu(QWidget *parent = 0, int entriesNumPerPage = 6);
     ~Menu();
     void addEntry(QWidget *newEntry);
-    void addEntries(std::vector<QWidget *> newEntries);
-    void removeEntry(QWidget *newEntry);
+    void resetEntries();
+    int getCount();
+    bool isTopHalf(QWidget *entry);
+    QRect getNextGeometry(QPushButton *btn);
 private:
     Ui::Menu *ui;
     int entriesPerPage = 6;

@@ -2,38 +2,38 @@
 #include <txtparser.h>
 #include <QFileInfo>
 #include <QDir>
+#include <iostream>
 BookPagedata::BookPagedata()
 {
 
 }
 
-BookPagedata::~BookPagedata()
-{
-    pagedataFile.close();
-}
-
-BookPagedata::BookPagedata(QString bookPath){
-    QFileInfo f(bookPath);
-    QString path = f.absoluteDir().absolutePath() + '/' + f.fileName().split('.')[0] + extension;
-    pagedataFile.open(path.toLocal8Bit().toStdString().c_str(), std::fstream::in);
-}
-
-unsigned int BookPagedata::page2Offset(unsigned int p){
+unsigned int BookPagedata::page2Offset(int p){
+    if(p < 0)
+        return 0;
+    pagedataFile.clear();
     pagedataFile.seekg(4 * p, std::ios_base::beg);
     charandint ci;
     ci.i = 0;
+    //std::cout<<pagedataFile.tellg()<<std::endl;
     pagedataFile.read(ci.c, 4);
     return ci.i;
 }
 
 bool BookPagedata::load(QString bookPath){
+    unload();
     QFileInfo f(bookPath);
-    QString path = f.absoluteDir().absolutePath() + '/' + f.fileName().split('.')[0] + extension;
+    QString path = f.absoluteFilePath() + '/' + f.fileName() + extension;
     pagedataFile.open(path.toLocal8Bit().toStdString().c_str(), std::fstream::in);
     return pagedataFile.is_open();
 }
 
+void BookPagedata::unload(){
+    if(pagedataFile.is_open())
+        pagedataFile.close();
+}
+
 QString BookPagedata::getPageDataFileName(QString bookPath){
      QFileInfo f(bookPath);
-     return f.absoluteDir().absolutePath() + '/' + f.fileName().split('.')[0] + extension;
+     return f.absoluteDir().absolutePath() + '/' + f.fileName().split("."+f.suffix())[0] + extension;
 }

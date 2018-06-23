@@ -97,6 +97,6 @@ int main(int argc, char *argv[])
     w.show();
     //testOpenCV();
     //getQRcodeFromVideo();
-    initCamera(4,false);
+    //initCamera(4,false);
     return a.exec();
 }
