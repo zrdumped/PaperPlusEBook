@@ -157,20 +157,24 @@ bool Menu::isTopHalf(QWidget *entry){
     return (i - currentPageIndex * entriesPerPage) < (entriesPerPage / 2);
 }
 
-QRect Menu::getNextGeometry(QPushButton *btn){
+QRect Menu::getNextGeometry(QWidget *btn, QWidget *parent){
     int num = (pages == currentPageIndex + 1) ? entries.size() - currentPageIndex * entriesPerPage : entriesPerPage;
     QLayout *tablelayout = ui->entryTable->layout();
     if(num == entriesPerPage){
         QRect rect = entries[currentPageIndex * entriesPerPage]->geometry();
+        rect.setX(entries[currentPageIndex * entriesPerPage]->mapTo(parent, QPoint(0,0)).x());
+        rect.setY(entries[currentPageIndex * entriesPerPage]->mapTo(parent, QPoint(0,0)).y());
         btn->setParent(NULL);
-        tablelayout->removeWidget(w);
+        tablelayout->removeWidget(btn);
         return rect;
     }
     else{
         tablelayout->addWidget(btn);
         QRect rect = btn->geometry();
+        rect.setX(btn->mapTo(parent, btn->pos()).x());
+        rect.setY(btn->mapTo(parent, btn->pos()).y());
         btn->setParent(NULL);
-        tablelayout->removeWidget(w);
+        tablelayout->removeWidget(btn);
         return rect;
     }
 }

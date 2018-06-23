@@ -51,7 +51,6 @@ public:
     void normalInformation(QString msg);
     bool normalDecision(QString msg);
     void turnToPageWithLeftPageNumber(int pageNumber);
-    void turnToPageWithRightPageNumber(int pageNumber);
 private:
     Ui::MainWindow *ui;
     ImageConfig *window;
@@ -94,6 +93,9 @@ private:
     QString dayLightStyle = "background-color: rgb(249, 245, 232);color: rgb(38, 38, 38);";
     QString nightLightStyle = "background-color: rgb(11, 11, 11);color: rgb(59, 59, 59);";
     bool isDayLighting = false;
+    int penWidth = 6;
+    int eraserWidth = 6;
+    QColor penColor = Qt::red;
     void showAllUIs();
     void hideAllUIs();
     void loadAllBookEntries();
@@ -117,6 +119,8 @@ private slots:
     void backToSelectNote();
     void addNote();
     void addNoteUp();
+    void usePen();
+    void useEraser();
 };
 
 #endif // MAINWINDOW_H

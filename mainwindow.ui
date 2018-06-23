@@ -398,6 +398,38 @@ color: rgb(38, 38, 38);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>eraserUI</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>useEraser()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>617</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>491</x>
+     <y>243</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>penUI</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>usePen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>526</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>491</x>
+     <y>243</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>SelectBook()</slot>
@@ -407,5 +439,7 @@ color: rgb(38, 38, 38);</string>
   <slot>changeLightingMode()</slot>
   <slot>backToSelectBook()</slot>
   <slot>backToSelectNote()</slot>
+  <slot>usePen()</slot>
+  <slot>useEraser()</slot>
  </slots>
 </ui>

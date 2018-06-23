@@ -19,7 +19,7 @@ public:
     void resetEntries();
     int getCount();
     bool isTopHalf(QWidget *entry);
-    QRect getNextGeometry(QPushButton *btn);
+    QRect getNextGeometry(QWidget *btn, QWidget *parent);
 private:
     Ui::Menu *ui;
     int entriesPerPage = 6;
