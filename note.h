@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QImage>
 #include <notemetadata.h>
+#include <QDateTime>
 class Note
 {
 /*
@@ -18,6 +19,7 @@ public:
     QString getIntroduction();
     QImage getNotePage(int page);
     void storeNotePage(QImage &img, int page);
+    QDateTime getLastModifiedTime();
 private:
     QDir noteDir;
     QString extension = ".png";

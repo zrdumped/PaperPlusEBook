@@ -22,5 +22,7 @@
         <file>icons/notesLabel.png</file>
         <file>icons/plus.png</file>
         <file>icons/return.png</file>
+        <file>icons/ok_white.png</file>
+        <file>icons/return_white.png</file>
     </qresource>
 </RCC>

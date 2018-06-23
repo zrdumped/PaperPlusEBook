@@ -2,6 +2,7 @@
 #define EMPTYNOTE_H
 
 #include <QFrame>
+#include <QPushButton>
 
 namespace Ui {
 class EmptyNote;
@@ -14,7 +15,7 @@ class EmptyNote : public QFrame
 public:
     explicit EmptyNote(QWidget *parent = 0);
     ~EmptyNote();
-
+     QPushButton *addNoteBtn();
 private:
     Ui::EmptyNote *ui;
 };

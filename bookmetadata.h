@@ -6,8 +6,8 @@
 class BookMetadata
 {
 /* The file name of metadata looks like this: bookName.bookmeta
- * file format: length of bookname |   bookname   | pageCount | lastReadPage
- *                    4 bytes      | length bytes |  4 bytes  |   4 bytes
+ * file format: length of bookname |   bookname   | pageCount | lastReadPage | lastReadTime
+ *                    4 bytes      | length bytes |  4 bytes  |   4 bytes    |  a few bytes
  * Properties:
  * bookPath: the filename of the 'book', including extension
  * bookPageCount: quantity of book pages

@@ -12,11 +12,11 @@ class BookPagedata
  */
 public:
     BookPagedata();
-    BookPagedata(QString bookPath);
-    unsigned int page2Offset(unsigned int p);
+    unsigned int page2Offset(int p);
     bool load(QString bookPath);
+    void unload();
     QString getPageDataFileName(QString bookPath);
-    ~BookPagedata();
+
 private:
     std::ifstream pagedataFile;
     QString extension = ".bookpage";

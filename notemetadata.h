@@ -19,6 +19,7 @@ public:
     void setLastModifiedTime(QDateTime dt);
     QString getIntroduction();
     void setIntroduction(QString intro);
+    void setNotePath();
     void storeMeta();
 private:
     QString notePath;

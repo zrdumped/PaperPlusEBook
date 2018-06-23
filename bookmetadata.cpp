@@ -18,7 +18,7 @@ BookMetadata::BookMetadata()
 BookMetadata::BookMetadata(QString fullPath, unsigned int pageCount, unsigned int lastRead){
     bookFullPath = fullPath;
     QFileInfo f(fullPath);
-    bookName = f.fileName().split(".")[0];
+    bookName = f.fileName().split("."+f.suffix())[0];
     metaFullPath = f.absoluteDir().absolutePath() + "/" + bookName + extension;
     bookPageCount = pageCount;
     lastReadPage = lastRead;
@@ -35,7 +35,7 @@ QString BookMetadata::getBookName(){
 void BookMetadata::setBookPath(QString path){
     bookFullPath = path;
     QFileInfo f(path);
-    bookName = f.fileName().split(".")[0];
+    bookName = f.fileName().split("."+f.suffix())[0];
     metaFullPath = f.absoluteDir().absolutePath() + "/" + bookName + extension;
 }
 
@@ -64,7 +64,9 @@ void BookMetadata::setLastReadTime(QDateTime dt){
 }
 
 bool BookMetadata::loadMeta(QString bookpath){
-    setBookPath(bookpath);
+    QFileInfo f(bookpath);
+    bookName = bookpath;
+    metaFullPath = f.absoluteFilePath() + "/" + bookName + extension;
     std::ifstream meta(metaFullPath.toLocal8Bit().toStdString().c_str(), std::fstream::in);
     if(!meta.is_open())
         return 0;
@@ -80,9 +82,12 @@ bool BookMetadata::loadMeta(QString bookpath){
     bookPageCount = ci.i;
     meta.read(ci.c, 4);
     lastReadPage = ci.i;
+    meta.read(ci.c, 4);
+    char *lst = (char *)malloc(ci.i);
+    meta.read(lst, ci.i);
+    lastReadTime = QDateTime::fromString(QString::fromStdString(std::string(lst, ci.i)), "yyyy-MM-dd hh:mm:ss");
+    free(lst);
     meta.close();
-    QFileInfo info(bookFullPath);
-    lastReadTime = info.lastRead();
     return 1;
 }
 
@@ -97,5 +102,11 @@ void BookMetadata::storeMeta(){
     meta.write(ci.c, 4);
     ci.i = lastReadPage;
     meta.write(ci.c, 4);
+    QFileInfo info(bookFullPath);
+    lastReadTime = info.lastRead();
+    std::string lst = lastReadTime.toString("yyyy-MM-dd hh:mm:ss").toStdString();
+    ci.i = lst.length();
+    meta.write(ci.c, 4);
+    meta.write(lst.c_str(), ci.i);
     meta.close();
 }
