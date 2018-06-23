@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MYCV_H
 #define MYCV_H
 

@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 #DEFINES += CWTWINDOWS
-#DEFINES += ZRWINDOWS
-DEFINES += TZYMACOSX
+DEFINES += ZRWINDOWS
+#DEFINES += TZYMACOSX
 
 DEFINES += DLL_EXPORT
 
@@ -62,7 +62,7 @@ SOURCES += \
     noteentryeditupper.cpp
 
 HEADERS += \
-        mainwindow.h    \
+    mainwindow.h    \
     txtparser.h \
     bookmetadata.h \
     bookpagedata.h \
@@ -92,7 +92,7 @@ HEADERS += \
     noteentryeditupper.h
 
 FORMS += \
-        mainwindow.ui \
+    mainwindow.ui \
     imageconfig.ui \
     menu.ui \
     singlepage.ui \
@@ -108,31 +108,53 @@ FORMS += \
     noteentryeditupper.ui
 
 if(contains(DEFINES, CWTWINDOWS)){
-INCLUDEPATH += \
-        E:\develop\opencv_build\include
+    INCLUDEPATH += \
+            E:\develop\opencv_build\include
 
-LIBS += \
-        #-LE:/develop/opencv/build/x64/vc15/lib/ \
-        #-lopencv_world341 \
-        #-lopencv_world341d \
-        -LE:\develop\opencv_build\lib\
-        -lopencv_highgui341 \
-        -lopencv_core341 \
-        -lopencv_videoio341 \
-        -lopencv_imgproc341  \
-        -lopencv_imgcodecs341 \
-        -lopencv_tracking341 \
+    CONFIG(debug, debug | release) {
+        LIBS += \
+                -LE:\develop\opencv_build\lib\
+                -lopencv_highgui341d \
+                -lopencv_core341d \
+                -lopencv_videoio341d \
+                -lopencv_imgproc341d  \
+                -lopencv_imgcodecs341d \
+                -lopencv_tracking341d \
+    } else {
+        LIBS += \
+                -LE:\develop\opencv_build\lib\
+                -lopencv_highgui341 \
+                -lopencv_core341 \
+                -lopencv_videoio341 \
+                -lopencv_imgproc341  \
+                -lopencv_imgcodecs341 \
+                -lopencv_tracking341 \
+    }
 }
 else{
 if(contains(DEFINES, ZRWINDOWS)){
 INCLUDEPATH += \
-        C:\OpenCV\opencv\build\include \
-        C:\OpenCV\opencv\build\include\opencv  \
-        C:\OpenCV\opencv\build\include\opencv2
+        F:\HCI\opencv_build\opencv_build\include
+#        F:\HCI\opencv_build\opencv_build\include\opencv  \
+#        F:\HCI\opencv_build\opencv_build\include\opencv2
 
-LIBS += C:\OpenCV\opencv\build\x64\vc14\lib\opencv_world330.lib \
-        C:\OpenCV\opencv\build\x64\vc14\lib\opencv_world330d.lib
-
+    CONFIG(debug, debug | release) {
+        LIBS += \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_highgui341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_core341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_videoio341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgproc341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgcodecs341d.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_tracking341d.lib
+    } else {
+        LIBS += \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_highgui341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_core341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_videoio341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgproc341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_imgcodecs341.lib \
+        F:\HCI\opencv_build\opencv_build\lib\opencv_tracking341.lib
+    }
 #INCLUDEPATH += $$PWD/poppler
 #LIBS += -L$$PWD/poppler -llibpoppler
 #LIBS += -L$$PWD/poppler -llibpoppler-qt5
