@@ -50,9 +50,16 @@ SOURCES += \
     arrowwidget.cpp \
     emptynote.cpp \
     emptybook.cpp \
-    touchtracker.cpp \
-    mycv.cpp \
-    writedetection.cpp
+        touchtracker.cpp \
+        mycv.cpp \
+    writedetection.cpp \
+    bookmanager.cpp \
+    bookentrymodal.cpp \
+    noteentrymodal.cpp \
+    noteentryedit.cpp \
+    bookentryuppermodal.cpp \
+    noteentryuppermodal.cpp \
+    noteentryeditupper.cpp
 
 HEADERS += \
     mainwindow.h    \
@@ -73,9 +80,16 @@ HEADERS += \
     emptynote.h \
     emptybook.h \
     qrcode.h \
-    touchtracker.h \
-    mycv.h \
-    writedetection.h
+        touchtracker.h \
+        mycv.h \
+    writedetection.h \
+    bookmanager.h \
+    bookentrymodal.h \
+    noteentrymodal.h \
+    noteentryedit.h \
+    bookentryuppermodal.h \
+    noteentryuppermodal.h \
+    noteentryeditupper.h
 
 FORMS += \
     mainwindow.ui \
@@ -85,7 +99,13 @@ FORMS += \
     choosebookpage.ui \
     choosenotepage.ui \
     emptynote.ui \
-    emptybook.ui
+    emptybook.ui \
+    bookentrymodal.ui \
+    noteentrymodal.ui \
+    noteentryedit.ui \
+    bookentryuppermodal.ui \
+    noteentryuppermodal.ui \
+    noteentryeditupper.ui
 
 if(contains(DEFINES, CWTWINDOWS)){
     INCLUDEPATH += \
@@ -150,10 +170,8 @@ INCLUDEPATH += \
              /usr/local/include/opencv2
 
 LIBS +=         \
-            -L/usr/local/lib -lopencv_imgproc -lopencv_core -lopencv_highgui -lopencv_imgcodecs \
+            -L/usr/local/lib -lopencv_imgproc -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_videoio -lopencv_tracking\
             -L/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources -lJPEG \
-
-
 
 }
 

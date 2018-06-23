@@ -2,6 +2,7 @@
 #define CHOOSENOTEPAGE_H
 
 #include <QFrame>
+#include <QPushButton>
 
 namespace Ui {
 class ChooseNotePage;
@@ -14,7 +15,8 @@ class ChooseNotePage : public QFrame
 public:
     explicit ChooseNotePage(QWidget *parent = 0);
     ~ChooseNotePage();
-
+    QPushButton *addNoteBtn();
+    QPushButton *returnBtn();
 private:
     Ui::ChooseNotePage *ui;
 };

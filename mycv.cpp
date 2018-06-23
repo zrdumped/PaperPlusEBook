@@ -1,5 +1,7 @@
 #include <mycv.h>
 #define gray_scale 256
+#define pi CV_PI
+#define Pi CV_PI
 
 static void MatMinus(Mat src, Mat mask, Mat dst) {
     for (int i = 0; i < src.rows; i++) {
@@ -298,3 +300,262 @@ void MyBinaryMorphologyRough(Mat src, Mat dst, int para[], int SE_ROW, int SE_CO
         }
     }
 }
+
+//void MyFilterGauss(Mat src, Mat dst, int size, int sigma) {
+//    if (size == 3) {
+//        double a = exp(-0 /(2.0 * (double)sigma * (double)sigma)) / (2.0 * pi * (double)sigma* (double)sigma);
+//        double b = exp(-1.0 / (2.0 * (double)sigma * (double)sigma)) / (2.0 * pi * (double)sigma* (double)sigma);
+//        double c = exp(-2.0 / (2.0 * (double)sigma * (double)sigma)) / (2.0 * pi * (double)sigma* (double)sigma);
+//        double total = a + b * 4.0 + c * 4.0;
+//        //std::cout << a << " " << b << " " << c << std::endl;
+//        for (int i = 1; i < src.rows - 1; i++) {
+//            for (int j = 1; j < src.cols - 1; j++) {
+//                double gray = (src.at<Vec4b>(i, j)[0] * a + src.at<Vec4b>(i + 1, j)[0] * b + src.at<Vec4b>(i, j + 1)[0] * b + src.at<Vec4b>(i + 1, j + 1)[0] * c
+//                    + src.at<Vec4b>(i - 1, j)[0] * b + src.at<Vec4b>(i - 1, j - 1)[0] * c+ src.at<Vec4b>(i - 1, j + 1)[0] * c
+//                    + src.at<Vec4b>(i, j - 1)[0] * b + src.at<Vec4b>(i + 1, j - 1)[0] * c)/total ;
+//                //if(i == 200 && j == 300)
+//                //std::cout << gray << std::endl;
+//                dst.at<Vec4b>(i, j)[0] = gray;
+//                dst.at<Vec4b>(i, j)[1] = gray;
+//                dst.at<Vec4b>(i, j)[2] = gray;
+//            }
+//        }
+//    }
+//    else {
+//        double a = exp(-0 / (2.0 * (double)sigma * (double)sigma)) / (2.0 * pi * (double)sigma);
+//        double b = exp(-1.0 / (2.0 * (double)sigma * (double)sigma)) / (2.0 * pi * (double)sigma);
+//        double c = exp(-2.0 / (2.0 * (double)sigma * (double)sigma)) / (2.0 * pi * (double)sigma);
+//        double d = exp(-4.0 / (2.0 * (double)sigma * (double)sigma)) / (2.0 * pi * (double)sigma);
+//        double e = exp(-5.0 / (2.0 * (double)sigma * (double)sigma)) / (2.0 * pi * (double)sigma);
+//        double f = exp(-8.0 / (2.0 * (double)sigma * (double)sigma)) / (2.0 * pi * (double)sigma);
+//        double total = a + b * 4.0 + c * 4.0 + d * 4.0 + e * 8.0 + f * 4.0;
+//        for (int i = 2; i < src.rows - 2; i++) {
+//            for (int j = 2; j < src.cols - 2; j++) {
+//                int gray = (src.at<Vec4b>(i - 2, j - 2)[0] * f + src.at<Vec4b>(i - 2, j - 1)[0] * e + src.at<Vec4b>(i - 2, j)[0] * d + src.at<Vec4b>(i - 2, j + 1)[0] * e + src.at<Vec4b>(i - 2, j + 2)[0] * f +
+//                    src.at<Vec4b>(i - 1, j - 2)[0] * e + src.at<Vec4b>(i - 1, j - 1)[0] * c + src.at<Vec4b>(i - 1, j)[0] * b + src.at<Vec4b>(i - 1, j + 1)[0] * c + src.at<Vec4b>(i - 1, j + 2)[0] * e +
+//                    src.at<Vec4b>(i, j - 2)[0] * d + src.at<Vec4b>(i, j - 1)[0] * b + src.at<Vec4b>(i, j)[0] * a + src.at<Vec4b>(i, j + 1)[0] * b + src.at<Vec4b>(i, j + 2)[0] * d +
+//                    src.at<Vec4b>(i + 1, j - 2)[0] * e + src.at<Vec4b>(i + 1, j - 1)[0] * c + src.at<Vec4b>(i + 1, j)[0] * b + src.at<Vec4b>(i + 1, j + 1)[0] * c + src.at<Vec4b>(i + 1, j + 2)[0] * e +
+//                    src.at<Vec4b>(i + 2, j - 2)[0] * f + src.at<Vec4b>(i + 2, j - 1)[0] * e + src.at<Vec4b>(i + 2, j)[0] * d + src.at<Vec4b>(i + 2, j + 1)[0] * e + src.at<Vec4b>(i + 2, j + 2)[0] * f) / total;
+//                dst.at<Vec4b>(i, j)[0] = gray;
+//                dst.at<Vec4b>(i, j)[1] = gray;
+//                dst.at<Vec4b>(i, j)[2] = gray;
+//            }
+//        }
+//    }
+//    return;
+//}
+
+//void MyConvolution(Mat src, Mat dst, int para[]) {
+//    int sum;
+//    for (int i = 0; i < 9; i++) {
+//        sum += para[i];
+//    }
+//    for (int i = 1; i < src.rows - 1; i++) {
+//        for (int j = 1; j < src.cols - 1; j++) {
+//            int gray = (src.at<Vec4b>(i, j)[0] * para[4] + src.at<Vec4b>(i + 1, j)[0] * para[7] + src.at<Vec4b>(i, j + 1)[0] * para[5] + src.at<Vec4b>(i + 1, j + 1)[0] * para[8]
+//                + src.at<Vec4b>(i - 1, j)[0] * para[1] + src.at<Vec4b>(i - 1, j - 1)[0] * para[0] + src.at<Vec4b>(i - 1, j + 1)[0] * para[2]
+//                + src.at<Vec4b>(i, j - 1)[0] * para[3] + src.at<Vec4b>(i + 1, j - 1)[0] * para[6]);
+//            dst.at<int>(i, j) = gray;
+//        }
+//    }
+//}
+
+//void MyEdgeSobel(Mat src, Mat dst, Mat GX, Mat GY) {
+//    int paraX[9] = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
+//    int paraY[9] = { 1, 2, 1, 0, 0, 0, -1, -2, -1 };
+
+//    MyConvolution(src, GX, paraX);
+//    MyConvolution(src, GY, paraY);
+
+//    for (int i = 0; i < src.rows; i++) {
+//        for (int j = 0; j < src.cols; j++) {
+//            Vec4b pt = src.at<Vec4b>(i, j);
+//            int res = sqrt(GX.at<int>(i, j) * GX.at<int>(i, j) + GY.at<int>(i, j) * GY.at<int>(i, j));
+//            if (res > 255) res = 255;
+//            dst.at<Vec4b>(i, j)[0] = res;
+//            dst.at<Vec4b>(i, j)[1] = res;
+//            dst.at<Vec4b>(i, j)[2] = res;
+//        }
+//    }
+//}
+
+//void MyEdgeCanny(Mat src, Mat dst,int high, int low, int sigma) {
+//    Mat tmp = Mat(src.rows, src.cols, src.type(), Scalar(0, 0, 0, 0));
+//    MyFilterGauss(src, tmp, 3, sigma);
+
+//    Mat GX = Mat(src.rows, src.cols, CV_32SC4, Scalar(0, 0, 0, 0));
+//    Mat GY = Mat(src.rows, src.cols, CV_32SC4, Scalar(0, 0, 0, 0));
+//    MyEdgeSobel(tmp, tmp, GX, GY);
+//    Mat temp = tmp.clone();
+//    Mat mask = Mat(src.rows, src.cols, CV_32SC4, Scalar(0, 0, 0, 0));
+//    std::vector<int> rootxs;
+//    std::vector<int> rootys;
+//    for (int i = 1; i < dst.rows - 1; i++) {
+//        for (int j = 1; j < dst.cols - 1; j++) {
+//            double angle = atan2(GY.at<int>(i, j), GX.at<int>(i, j));
+//            if (angle <= 0) angle += pi;
+//            //std::cout << angle << std::endl;
+//            int gray = tmp.at<Vec4b>(i, j)[0];
+//            int dir;
+//            //竖着为0， 二四象限为1， 横为2， 一三象限为3
+//            if (angle > pi  * 3.0 / 8.0 && angle < pi * 5.0 / 8.0) dir = 0;
+//            else if (angle >= pi * 5.0 / 8.0 && angle < pi  * 7.0 / 8.0) dir = 1;
+//            else if (angle >= pi / 8.0 && angle < pi * 3.0 / 8.0) dir = 3;
+//            else dir = 2;
+//            switch (dir) {
+//            case 0:
+//                if (tmp.at<Vec4b>(i - 1, j)[0] < gray && tmp.at<Vec4b>(i + 1, j)[0] < gray){
+//                    temp.at<Vec4b>(i, j)[0] = tmp.at<Vec4b>(i, j)[0];
+//                    temp.at<Vec4b>(i, j)[1] = tmp.at<Vec4b>(i, j)[1];
+//                    temp.at<Vec4b>(i, j)[2] = tmp.at<Vec4b>(i, j)[2];
+//                }
+//                else {
+//                    temp.at<Vec4b>(i, j)[0] = 0;
+//                    temp.at<Vec4b>(i, j)[1] = 0;
+//                    temp.at<Vec4b>(i, j)[2] = 0;
+//                }
+//                break;
+//            case 1:
+//                if (tmp.at<Vec4b>(i - 1, j - 1)[0] < gray && tmp.at<Vec4b>(i + 1, j + 1)[0] < gray)
+//                {
+//                    temp.at<Vec4b>(i, j)[0] = tmp.at<Vec4b>(i, j)[0];
+//                    temp.at<Vec4b>(i, j)[1] = tmp.at<Vec4b>(i, j)[1];
+//                    temp.at<Vec4b>(i, j)[2] = tmp.at<Vec4b>(i, j)[2];
+//                }
+//                else {
+//                    temp.at<Vec4b>(i, j)[0] = 0;
+//                    temp.at<Vec4b>(i, j)[1] = 0;
+//                    temp.at<Vec4b>(i, j)[2] = 0;
+//                }
+//                break;
+//            case 2:
+//                if (tmp.at<Vec4b>(i, j + 1)[0] < gray && tmp.at<Vec4b>(i, j - 1)[0] < gray)
+//                {
+//                    temp.at<Vec4b>(i, j)[0] = tmp.at<Vec4b>(i, j)[0];
+//                    temp.at<Vec4b>(i, j)[1] = tmp.at<Vec4b>(i, j)[1];
+//                    temp.at<Vec4b>(i, j)[2] = tmp.at<Vec4b>(i, j)[2];
+//                }
+//                else {
+//                    temp.at<Vec4b>(i, j)[0] = 0;
+//                    temp.at<Vec4b>(i, j)[1] = 0;
+//                    temp.at<Vec4b>(i, j)[2] = 0;
+//                }
+//                break;
+//            case 3:
+//                if (tmp.at<Vec4b>(i - 1, j + 1)[0] < gray && tmp.at<Vec4b>(i + 1, j - 1)[0] < gray)
+//                {
+//                    temp.at<Vec4b>(i, j)[0] = tmp.at<Vec4b>(i, j)[0];
+//                    temp.at<Vec4b>(i, j)[1] = tmp.at<Vec4b>(i, j)[1];
+//                    temp.at<Vec4b>(i, j)[2] = tmp.at<Vec4b>(i, j)[2];
+//                }
+//                else {
+//                    temp.at<Vec4b>(i, j)[0] = 0;
+//                    temp.at<Vec4b>(i, j)[1] = 0;
+//                    temp.at<Vec4b>(i, j)[2] = 0;
+//                }
+//                break;
+//            default:
+//                break;
+//            }
+//            //0 no 1 weak 2 strong
+//            if (temp.at<Vec4b>(i, j)[0] > high) {
+//                mask.at<int>(i, j) = 2;
+//                rootxs.push_back(i);
+//                rootys.push_back(j);
+//            }
+//            else if (temp.at<Vec4b>(i, j)[0] < low)mask.at<int>(i, j) = 0;
+//            else mask.at<int>(i, j) = 1;
+//        }
+
+//    }
+
+///*	for (int i = 1; i < dst.rows - 1; i++) {
+//        for (int j = 1; j < dst.cols - 1; j++) {
+//                int gray = temp.at<Vec4b>(i, j)[0];
+//                dst.at<Vec4b>(i, j)[0] = gray;
+//                dst.at<Vec4b>(i, j)[1] = gray;
+//                dst.at<Vec4b>(i, j)[2] = gray;
+
+//        }
+//    }
+//    return;*/
+
+
+//    for (int i = 0; i < rootxs.size(); i++) {
+//    search(rootxs[i], rootys[i], mask);
+//    }
+//    for (int i = 1; i < dst.rows - 1; i++) {
+//        for (int j = 1; j < dst.cols - 1; j++) {
+//            if (mask.at<int>(i, j) == 2) {
+//                int gray = temp.at<Vec4b>(i, j)[0];
+//                dst.at<Vec4b>(i, j)[0] = gray;
+//                dst.at<Vec4b>(i, j)[1] = gray;
+//                dst.at<Vec4b>(i, j)[2] = gray;
+//            }
+
+//            else {
+//                dst.at<Vec4b>(i, j)[0] = 0;
+//                dst.at<Vec4b>(i, j)[1] = 0;
+//                dst.at<Vec4b>(i, j)[2] = 0;
+//            }
+//        }
+//    }
+
+
+
+//}
+
+//void MyHoughLine(Mat src, Mat dst, int high, int low, int sigma, int MinNum){
+//    Mat tmp = Mat(src.rows, src.cols, src.type(), Scalar(0, 0, 0, 0));
+//    MyEdgeCanny(src, tmp, high, low, sigma);
+//    MyBinary(tmp, tmp, 1);
+
+//    int width = tmp.cols;
+//    int height = tmp.rows;
+//    int iRMax = (int)sqrt(width*width + height*height) + 1;
+//    int iThMax = 500;// theta0;
+//    int *pArray;
+//    pArray = new int[2 * iRMax*iThMax];
+//    memset(pArray, 0, sizeof(int) * 2 * iRMax*iThMax);
+//    float fRate = (float)(Pi / 180);
+//    vector<Vec2f> lines;
+//    for (int y = 0; y < height; y++)
+//        for (int x = 0; x < width; x++)
+//        {
+//            if (tmp.at<Vec4b>(y, x)[0] == 255)
+//            {
+//                for (int iTh = 0; iTh < iThMax; iTh += 1)
+//                {
+//                    int iR = (int)(x*cos(iTh*fRate) + y*sin(iTh*fRate));
+//                    //if (iR < 0)
+//                    //    continue;
+//                    iR = iR + iRMax;
+//                    pArray[2 * iRMax*iTh + iR]++;
+//                }
+//            }
+//        }
+//    for (int theta = 0; theta < 500; theta++)
+//    {
+//        for (int r = 0; r < iRMax * 2; r++)
+//        {
+//            int thetaL = max(0, theta - 1);
+//            int thetaR = min(359, theta + 1);
+//            int rL = max(0, r - 1);
+//            int rR = min(iRMax * 2 - 1, r + 1);
+//            int tmp = pArray[theta*iRMax * 2 + r];
+//            //if ((tmp>MinNum)
+//            //    && tmp>pArray[thetaL*iRMax * 2 + rL] && tmp>pArray[thetaL*iRMax * 2 + r]
+//            //    && (tmp>pArray[thetaL*iRMax * 2 + rR])&& (tmp > pArray[theta*iRMax * 2 + rL])
+//            //    && (tmp > pArray[theta*iRMax * 2 + rR])&& (tmp > pArray[thetaR*iRMax * 2 + rL])
+//            //    && (tmp > pArray[thetaR*iRMax * 2 + r]) && (tmp > pArray[thetaR*iRMax * 2 + rR])
+//            if ((tmp>MinNum)
+//                && tmp>pArray[thetaL*iRMax * 2 + r]
+//                && (tmp >= pArray[theta*iRMax * 2 + rR]) && (tmp > pArray[theta*iRMax * 2 + rL])
+//                && (tmp >= pArray[thetaR*iRMax * 2 + r]))
+//            {
+//                Vec2f t = Vec2f(float(r - iRMax), float(theta));
+//                lines.push_back(t);
+//            }
+//        }
+//    }
+//}

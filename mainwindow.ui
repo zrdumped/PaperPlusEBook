@@ -48,7 +48,7 @@
        </size>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
@@ -128,7 +128,7 @@
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
@@ -153,7 +153,7 @@
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
@@ -167,7 +167,7 @@
 color: rgb(38, 38, 38);</string>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
@@ -176,7 +176,10 @@ color: rgb(38, 38, 38);</string>
        <item>
         <widget class="QLabel" name="bookName">
          <property name="text">
-          <string>TextLabel</string>
+          <string/>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -260,7 +263,7 @@ color: rgb(38, 38, 38);</string>
        <bool>false</bool>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
@@ -288,7 +291,7 @@ color: rgb(38, 38, 38);</string>
 </string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::NoFrame</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
@@ -301,7 +304,7 @@ color: rgb(38, 38, 38);</string>
           <string notr="true">background-color: rgb(0, 0, 0);</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::NoFrame</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
@@ -315,7 +318,7 @@ color: rgb(38, 38, 38);</string>
           <string notr="true">QFrame{background-color: rgb(255, 255, 255);}</string>
          </property>
          <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+          <enum>QFrame::NoFrame</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
@@ -327,25 +330,6 @@ color: rgb(38, 38, 38);</string>
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>983</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
@@ -366,10 +350,62 @@ color: rgb(38, 38, 38);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>bookSelector</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>backToSelectBook()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>341</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>491</x>
+     <y>243</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>noteSelector</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>backToSelectNote()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>432</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>491</x>
+     <y>243</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dayOrNight</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeLightingMode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>819</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>491</x>
+     <y>243</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>SelectBook()</slot>
   <slot>SetOffset()</slot>
   <slot>OpenImageConfigureWindow()</slot>
+  <slot>createNewBook()</slot>
+  <slot>changeLightingMode()</slot>
+  <slot>backToSelectBook()</slot>
+  <slot>backToSelectNote()</slot>
  </slots>
 </ui>

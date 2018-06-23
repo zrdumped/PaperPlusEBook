@@ -1,8 +1,9 @@
 #include "myifstream.h"
 #include <QTextCodec>
+#include <iostream>
 MyIfstream::MyIfstream()
 {
-
+    f = std::ifstream();
 }
 
 MyIfstream::MyIfstream(const char *fname)
@@ -26,6 +27,15 @@ unsigned int MyIfstream::tellg(){
 
 void MyIfstream::seekg(unsigned int pos){
     f.seekg(pos, std::ios_base::beg);
+}
+
+void MyIfstream::clear(){
+    f.clear();
+}
+
+unsigned int MyIfstream::tellend(){
+    f.seekg(0, std::ios_base::end);
+    return f.tellg();
 }
 
 void MyIfstream::setCodetype(){
@@ -138,9 +148,26 @@ void MyIfstream::close(){
 }
 
 int MyIfstream::read(QChar *c, int size){
+    if(f.eof())
+        return 0;
     for(int i = 0; i < size; i++){
         c[i] = getCharWithDecoded();
+        if(f.eof())
+            return i + 1;
     }
     return size;
 }
 
+QString MyIfstream::readsome(int charSize){
+    if(f.eof())
+        return "";
+    QString s = "";
+    for(int i = 0; i < charSize; i++){
+        s += getCharWithDecoded();
+    }
+    return s;
+}
+
+bool MyIfstream::is_open(){
+    return f.is_open();
+}
