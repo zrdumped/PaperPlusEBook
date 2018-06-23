@@ -14,6 +14,7 @@
 #include <thread>
 #include <QTimer>
 #include <QPainter>
+#include <vector>
 using namespace std;
 
 enum camera {TOP, BOTTOM1, BOTTOM2};
@@ -41,12 +42,31 @@ private:
     //left-up,right-up, left-down, right-down
     vector<pair<int, int>> rectPoints;
     bool choseRect = false;
+    int distance = 3;
+    Point penPoint;
+    Rect2d roi;
+    Ptr<Tracker> tracker;
+    pair<double, double> lineTop;
+    pair<double, double> lineBottom;
+    pair<double, double> lineLeft;
+    pair<double, double> lineRight;
+    bool lineLeftRightParr = false;
+    bool lineUpDownParr = false;
+    Point verticalPoint;
+    Point horizontalPoint;
+    int screenHeight = 100;
+    int screenWidth = 200;
+
 
 
     QImage ShowImage(Mat src, QLabel* label, QImage::Format format);
     void ShowImage(QPixmap src, QLabel* label);
     void ChangeButtonMode(bool openConfirm);
     void FindPointsInRect(Mat src);
+    Point GetScreenPoint(Point);
+    Point CallSharedPoint(pair<double, double>, pair<double, double>);
+    inline double CallDistance(Point, Point);
+    pair<double, double> CallLine(Point, Point);
 
     QTimer theTimer;
 
@@ -68,6 +88,8 @@ public Q_SLOTS:
     void updateImage();
     void confirm();
     void cancle();
+    Point GetPoint();
+    void test();
 };
 
 #endif // IMAGECONFIG_H
