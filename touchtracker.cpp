@@ -6,9 +6,12 @@ using namespace std;
 #define SSTR( x ) static_cast< std::ostringstream & >( \
 ( std::ostringstream() << std::dec << x ) ).str()
 
+// whether to save video
 //#define SAVE_VIDEO
-//#define DEVIATION -7
-
+// whether to use init image
+#define USE_DISK
+// The path for init image
+#define INIT_PATH string("E:/")
 // The path for video input
 #define VIDEO_IN string("E:/touch_test_realcut")
 // The type of tracker to use (0~5)
@@ -17,11 +20,12 @@ using namespace std;
 #define TT_DEBUG
 
 // The slope of the line to detect shadow
-const float slope = 181.0f/662.0f;
+const float slope = 200.0f/662.0f;
 // The width of line expected to be black to return true for checkTouch
-const int expect = 12;
+const int expect = 20;
 static Ptr<Tracker> trackerp, trackers;
 static int offpx, offpy, offsx, offsy;
+static string handle = "default";
 
 TouchTracker::TouchTracker()
 {
@@ -31,6 +35,71 @@ TouchTracker::TouchTracker()
  * TouchTracker
  * variable name: 'p' stands for pen, 's' stands for shadow
  * *************************************************************/
+int TouchTracker::testTouchPlus()
+{
+    // #1 - open video
+    VideoCapture video(0);
+    if(!video.isOpened()) {
+        cout << "TouchTracker: could not locate video file "
+             << VIDEO_IN + ".mp4, check macro VIDEO_IN" << endl;
+        return 1;
+    }
+
+#ifdef SAVE_VIDEO
+    VideoWriter writer(VIDEO_IN + ".avi", CV_FOURCC('D', 'I', 'V', 'X'), 18.0,
+                       Size(video.get(CV_CAP_PROP_FRAME_WIDTH),
+                       video.get(CV_CAP_PROP_FRAME_HEIGHT)));
+#endif
+
+    // #2 - setup
+    Mat frame;
+    handle = "testplus";
+#ifdef USE_DISK
+    initTouchFromDisk();
+    while (video.read(frame)) {
+        int key = waitKey(1);
+        if (key == 27)
+            break;
+        Rect2d boxp = getRectFromDisk();
+        rectangle(frame, boxp, Scalar( 255, 0, 0 ), 2, 1 );
+        imshow("Touch Tracking", frame);
+    }
+#else
+    while (video.read(frame)) {
+        int key = waitKey(1);
+        if (key == 27)
+            break;
+        imshow("Touch Tracking", frame);
+    }
+    initTouchIntoDisk(, frame);
+#endif
+
+    // #3 - loop for each frame
+    bool verbose = true;
+    while (video.read(frame)) {
+        int key = waitKey(1);
+        if(key == 27)
+            break;
+        else if (key == 'd')
+            verbose = !verbose;
+        else if (key == 'f') {
+            initTouch(frame);
+            continue;
+        }
+
+        if (checkTouch(frame, verbose)) {
+            putText(frame, "Touching", Point(50,80), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0,0,255),2);
+        }
+        imshow("Touch Tracking", frame);
+#ifdef SAVE_VIDEO
+        writer << frame;
+#endif
+    }
+
+    destroyWindow("Touch Tracking");
+    return 0;
+}
+
 int TouchTracker::testTouch()
 {
     // #1 - open video
@@ -50,12 +119,17 @@ int TouchTracker::testTouch()
 #endif
 
     // #2 - setup
-    Rect2d boxp(415, 80, 54, 49);
-    initTouch(boxp, frame);
-    //initTouch(frame);
+    //Rect2d boxp(415, 80, 54, 49);
+    //initTouch(boxp, frame);
+    handle = "test";
+#ifdef USE_DISK
+    initTouchFromDisk();
+#else
+    initTouchIntoDisk(frame);
+#endif
 
     // #3 - loop for each frame
-    bool verbose = false;
+    bool verbose = true;
     while (video.read(frame)) {
         int key = waitKey(1);
         if(key == 27)
@@ -102,6 +176,46 @@ void TouchTracker::initTouch(Rect2d boxp, Mat frame)
     findNib(imgp, offpx, offpy);
 }
 
+Rect2d TouchTracker::getRectFromDisk()
+{
+    Rect2d boxp;
+    QSettings *config = new QSettings(QString::fromStdString(INIT_PATH) + "ppeb_config.ini", QSettings::IniFormat);
+    boxp.x = config->value(handle + "/x").toInt();
+    boxp.y = config->value(handle + "/y").toInt();
+    boxp.width = config->value(handle + "/width").toInt();
+    boxp.height = config->value(handle + "/height").toInt();
+    return boxp;
+}
+
+void TouchTracker::initTouchFromDisk()
+{
+    Mat frame = imread(INIT_PATH + "ppeb_track_" + hanle + ".png");
+    if (frame.empty()) {
+        cout << "initTouchFromDisk: init image doesn't exist" << endl;
+        exit(-1);
+    }
+    Rect2d boxp = getRectFromDisk();
+    initTouch(boxp, frame);
+}
+
+void TouchTracker::initTouchIntoDisk(Mat frame)
+{
+    Rect2d boxp;
+    boxp = selectROI(frame, false);
+    destroyWindow("ROI selector");
+
+    imwrite(INIT_PATH + "ppeb_track_" + handle + ".png", frame);
+    QSettings *config = new QSettings(QString::fromStdString(INIT_PATH) + "ppeb_config.ini", QSettings::IniFormat);
+    config->beginGroup(handle);
+    config->setValue("x", boxp.x);
+    config->setValue("y", boxp.y);
+    config->setValue("width", boxp.width);
+    config->setValue("height", boxp.height);
+    config->endGroup();
+
+    initTouch(boxp, frame);
+}
+
 bool TouchTracker::checkTouch(Mat frame, bool verbose)
 {
 #ifdef TT_DEBUG
@@ -120,10 +234,9 @@ bool TouchTracker::checkTouch(Mat frame, bool verbose)
 #endif
 
     if (okp) {
-        Mat mat = Mat::Mat(frame, boxp);
-        cvtColor(mat, mat, CV_BGR2GRAY);
-        threshold(mat, mat, 0, 255, CV_THRESH_OTSU);
-        float row = mat.rows + offpy - (mat.cols + offpx) * slope;
+        // corner case: trackee get out of screen
+        if (boxp.width + boxp.x >= frame.cols || boxp.height + boxp.y >= frame.rows)
+            return false;
 
 #ifdef TT_DEBUG
         if (verbose) {
@@ -137,6 +250,10 @@ bool TouchTracker::checkTouch(Mat frame, bool verbose)
             line(frame, p3, p1, CV_RGB(255, 0, 0), 2);
         }
 #endif
+        Mat mat = Mat::Mat(frame, boxp);
+        cvtColor(mat, mat, CV_BGR2GRAY);
+        threshold(mat, mat, 0, 255, CV_THRESH_OTSU);
+        float row = mat.rows + offpy - (mat.cols + offpx) * slope;
 
         for (int col = 0; col < expect; col++) {
             uchar *data = mat.ptr<uchar>((int)row);

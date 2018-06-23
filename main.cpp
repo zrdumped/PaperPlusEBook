@@ -55,7 +55,7 @@ int getQRcodeFromVideo(){
 //mode = 3 two bottoms
 //mode = 4 all
 int initCamera(int mode, bool showImg){
-    capTop = VideoCapture(2);
+    capTop = VideoCapture(1);
     Mat img;
     if(!capTop.isOpened()){
         cout<<"create camera capture error"<<endl;

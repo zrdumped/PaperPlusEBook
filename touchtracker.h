@@ -6,15 +6,23 @@
 #include <opencv2/tracking.hpp>
 #include <opencv2/core/ocl.hpp>
 #include <QString>
+#include <QSettings>
 using namespace cv;
 
 class TouchTracker
 {
 public:
     static int testTouch();
+    static int testTouchPlus();
+
     static void initTouch(Mat frame);
     static void initTouch(Rect2d boxp, Mat frame);
-    static bool checkTouch(Mat frame, bool verbose);
+
+    static Rect2d getRectFromDisk();
+    static void initTouchFromDisk();
+    static void initTouchIntoDisk(Mat frame);
+
+    static bool checkTouch(Mat frame, bool verbose = true);
 
 #ifdef FF_DEPRECATED
     static int example();
