@@ -5,7 +5,9 @@
 #include <QMessageBox>
 #include <iostream>
 #include <QLayout>
-//#include <poppler/cpp/poppler-image.h>
+#include <QStackedLayout>
+#include <QFileDialog>
+#include <QLabel>
 /*
  * Menu: QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);} minimum height: 40px
  */
@@ -74,8 +76,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //day or night
     icon = ui->dayOrNight->icon();
     ui->dayOrNight->setIconSize(QSize(iconSideLength, iconSideLength));
-    icon.addPixmap(QPixmap(":/icons/moon.png"), QIcon::Selected);
-    icon.addPixmap(QPixmap(":/icons/sun.png"), QIcon::Normal);
+    icon.addPixmap(QPixmap(":/icons/sun.png"), QIcon::Normal, QIcon::On);
+    icon.addPixmap(QPixmap(":/icons/moon.png"), QIcon::Normal, QIcon::Off);
+    ui->dayOrNight->setCheckable(true);
     ui->dayOrNight->setIcon(icon);
     ui->dayOrNight->setHidden(true);
     //hide bookname
@@ -86,41 +89,103 @@ MainWindow::MainWindow(QWidget *parent) :
     //for now, for debug...
     showAllUIs();
     //bookMenu
-    bookMenu = new Menu(this, 8);
-    bookMenu->setHidden(true);
+    bookMenu = new Menu(this, entryPerPage);
     //noteMenu
-    noteMenu = new Menu(this, 8);
-    noteMenu->setHidden(true);
+    noteMenu = new Menu(this, entryPerPage);
     //penStyle
     penStyle = new ArrowWidget(this);
     penStyle->setHidden(true);
     //choosebookpage
     choosebookpage = new ChooseBookPage(this);
-    choosebookpage->setHidden(true);
+    QObject::connect(choosebookpage->addBookBtn(), &QPushButton::clicked, this, &MainWindow::createNewBook);
     //choosenotepage
     choosenotepage = new ChooseNotePage(this);
-    //choosenotepage->setHidden(true);
+    QObject::connect(choosenotepage->addNoteBtn(), &QPushButton::clicked, this, &MainWindow::createNewNote);
+    QObject::connect(choosenotepage->returnBtn(), &QPushButton::clicked, this, &MainWindow::backToSelectBook);
+    //empty book
+    emptybookpage = new EmptyBook(this);
+    QObject::connect(emptybookpage->addBookBtn(), &QPushButton::clicked, this, &MainWindow::createNewBook);
+    //empty note
+    emptynotepage = new EmptyNote(this);
+    QObject::connect(emptynotepage->addNoteBtn(), &QPushButton::clicked, this, &MainWindow::createNewNote);
+    //pages
+    leftPage = new SinglePage(this);
+    rightPage = new SinglePage(this);
     //setup page layout
-    ui->leftPage->setLayout(new QHBoxLayout());
-    ui->rightPage->setLayout(new QHBoxLayout());
-    QLayout *leftPGLayout = ui->leftPage->layout();
-    leftPGLayout->setMargin(0);
-    leftPGLayout->addWidget(choosebookpage);
-    leftPGLayout->addWidget(choosenotepage);
-    QLayout *rightPGLayout = ui->rightPage->layout();
-    rightPGLayout->setMargin(0);
+    ui->leftPage->setLayout(new QStackedLayout(ui->leftPage));
+    ui->rightPage->setLayout(new QStackedLayout(ui->rightPage));
+    leftPageStack = (QStackedLayout *)ui->leftPage->layout();
+    leftPageStack->setMargin(0);
+    leftPageStack->addWidget(choosebookpage);
+    leftPageStack->addWidget(choosenotepage);
+    leftPageStack->addWidget(leftPage);
+    rightPageStack = (QStackedLayout *)ui->rightPage->layout();
+    rightPageStack->setMargin(0);
+    rightPageStack->addWidget(emptybookpage);
+    rightPageStack->addWidget(emptynotepage);
+    rightPageStack->addWidget(rightPage);
+    rightPageStack->addWidget(bookMenu);
+    rightPageStack->addWidget(noteMenu);
     //rightPGLayout->addWidget(choosebookpage);
     //ui->leftPage->setLayout(leftPGLayout);
     //eraserStyle
     //eraserStyle = new ArrowWidget(this);
     //offsetSetter
     //offsetSetter = new ArrowWidget(this);
+    //white panel
+    whitePanel = new QPushButton(this);
+    whitePanel->setStyleSheet("background-color:rgb(255,255,255,100)");
+    whitePanel->setHidden(true);
+    QObject::connect(whitePanel, &QPushButton::clicked, this, &MainWindow::backToRead);
+    //6 modals
+    bookentrymodal = new bookEntryModal(this);
+    noteentrymodal = new noteEntryModal(this);
+    bookentryuppermodal = new bookEntryUpperModal(this);
+    noteentryuppermodal = new noteEntryUpperModal(this);
+    noteentryedit = new noteEntryEdit(this);
+    noteentryeditupper = new noteEntryEditUpper(this);
+    bookentrymodal->setHidden(true);
+    noteentrymodal->setHidden(true);
+    bookentryuppermodal->setHidden(true);
+    noteentryuppermodal->setHidden(true);
+    noteentryedit->setHidden(true);
+    noteentryeditupper->setHidden(true);
+    QPushButton *cancel = bookentrymodal->cancelButton();
+    QObject::connect(cancel, &QPushButton::clicked, this, &MainWindow::backToRead);
+    cancel = noteentrymodal->cancelButton();
+    QObject::connect(cancel, &QPushButton::clicked, this, &MainWindow::backToRead);
+    cancel = bookentryuppermodal->cancelButton();
+    QObject::connect(cancel, &QPushButton::clicked, this, &MainWindow::backToRead);
+    cancel = noteentryuppermodal->cancelButton();
+    QObject::connect(cancel, &QPushButton::clicked, this, &MainWindow::backToRead);
+    cancel = noteentryedit->cancelButton();
+    QObject::connect(cancel, &QPushButton::clicked, this, &MainWindow::backToRead);
+    cancel = noteentryeditupper->cancelButton();
+    QObject::connect(cancel, &QPushButton::clicked, this, &MainWindow::backToRead);
+    QPushButton *confirm = bookentrymodal->confirmButton();
+    QObject::connect(confirm, &QPushButton::clicked, this, &MainWindow::selectBook);
+    confirm = bookentryuppermodal->confirmButton();
+    QObject::connect(confirm, &QPushButton::clicked, this, &MainWindow::selectBook);
+    confirm = noteentrymodal->confirmButton();
+    QObject::connect(confirm, &QPushButton::clicked, this, &MainWindow::selectNote);
+    confirm = noteentryuppermodal->confirmButton();
+    QObject::connect(confirm, &QPushButton::clicked, this, &MainWindow::selectNote);
+    confirm = noteentryedit->confirmButton();
+    QObject::connect(confirm, &QPushButton::clicked, this, &MainWindow::addNote);
+    confirm = noteentryeditupper->confirmButton();
+    QObject::connect(confirm, &QPushButton::clicked, this, &MainWindow::addNoteUp);
     //set daymode Lighting
     changeLightingMode();
+    //set up left page
+    leftPageStack->setCurrentWidget(choosebookpage);
+    //load book menu
+    loadAllBookEntries();
 }
 
 MainWindow::~MainWindow()
 {
+    bookmanager.closeBook();
+    autoSaveNote();
     delete ui;
 }
 
@@ -151,149 +216,16 @@ bool MainWindow::normalDecision(QString msg){
     }
 }
 
-
-int MainWindow::InitPageNumber(){
-    //check qrcode and records
-
-    //no records, set page number with the qrcode
-    //0 for now
-    return 0;
-}
-
-int MainWindow::SetPage(){
-    /*book.seekg(left_page_num * each_page_bytes, std::ios::beg);
-    char buf[12];
-    book.read(buf, each_page_bytes);
-    buf[each_page_bytes] = '\0';
-    ui->LeftPG->setText(QString::fromLocal8Bit(buf, each_page_bytes));
-    std::cout<<buf<<std::endl;
-    book.read(buf, each_page_bytes);
-    ui->RightPG->setText(QString::fromLocal8Bit(buf, each_page_bytes));
-    QImage leftpgimg, rightpgimg;
-    int maxpgs = book->numPages();
-    if(left_page_num + 1 < 0 || left_page_num >= maxpgs){
-        //white
-        leftpgimg = QImage(pg_width, pg_height, QImage::Format_RGBA8888);
-        leftpgimg.fill(QColor(255,255,255));
-        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
-        rightpgimg = QImage(pg_width, pg_height, QImage::Format_RGBA8888);
-        rightpgimg.fill(QColor(255,255,255));
-        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
-    }
-    else if(left_page_num < 0){
-        Poppler::Page *rightpg = book->page(0);
-        //the first page is on the right
-        rightpgimg = rightpg->renderToImage(res_x, res_y);
-        rightpgimg = rightpgimg.scaled(pg_width, pg_height);
-        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
-        //deal with left
-        leftpgimg = QImage(leftpgimg.width(), leftpgimg.height(), QImage::Format_RGBA8888);
-        leftpgimg.fill(QColor(255,255,255));
-        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
-        delete rightpg;
-    }
-    else if(left_page_num + 1 >= maxpgs){
-        Poppler::Page *leftpg = book->page(maxpgs - 1);
-        //the last page is on the left
-        leftpgimg = leftpg->renderToImage(res_x, res_y);
-        leftpgimg = leftpgimg.scaled(pg_width,pg_height);
-        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
-        //deal with right
-        rightpgimg = QImage(leftpgimg.width(), leftpgimg.height(), QImage::Format_RGBA8888);
-        rightpgimg.fill(QColor(255,255,255));
-        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
-        delete leftpg;
+void MainWindow::createNewBook(){
+    QString fileName = QFileDialog::getOpenFileName(this, NULL, NULL, "*.txt");
+    if (fileName == NULL) return;
+    if(bookmanager.addBook(fileName, QFileInfo(fileName).fileName().split("."+QFileInfo(fileName).suffix())[0]) < 0){
+        normalInformation("该书已存在。");
     }
     else{
-        //normal pages
-        Poppler::Page *leftpg = book->page(left_page_num);
-        Poppler::Page *rightpg = book->page(left_page_num + 1);
-        leftpgimg = leftpg->renderToImage(res_x, res_y,-1,-1,leftpg->pageSize().width(),leftpg->pageSize().height());
-        rightpgimg = rightpg->renderToImage(res_x, res_y,-1,-1,rightpg->pageSize().width(),rightpg->pageSize().height());
-        leftpgimg = leftpgimg.scaled(pg_width, pg_height);
-        rightpgimg = rightpgimg.scaled(pg_width, pg_height);
-        std::cout<<leftpgimg.size().height()<<" "<<rightpgimg.size().width()<<std::endl;
-        ui->LeftPG->setPixmap(QPixmap::fromImage(leftpgimg));
-        ui->RightPG->setPixmap(QPixmap::fromImage(rightpgimg));
-        delete leftpg;
-        delete rightpg;
-    }*/
-    return left_page_num;
-}
-
-void MainWindow::SelectBook(){
-    /*//choose a book
-    book_name = QFileDialog::getOpenFileName(this, NULL, NULL, "*.txt");
-    if (book_name == NULL)
-        return;
-    //set up document
-   // book = Poppler::Document::load(book_name);
-    book.open(book_name.toLocal8Bit().toStdString());
-
-    //set page number
-    left_page_num = InitPageNumber();
-    //set up page image
-    SetPage();
-    if(left_page_num < 0)
-        normalWarning("无可读内容");
-    return;*/
-
-}
-
-int MainWindow::turnover(int pages){
-    /*left_page_num += pages;
-    //reset page images
-    SetPage();
-    return left_page_num;*/
-    return 0;
-}
-
-int MainWindow::AddPageNumber(int number){
-    /*book.seekg(0, book.end);
-    size_t p = book.tellg();
-    if(p%each_page_bytes)
-        p = p/each_page_bytes + 1;
-    else
-        p = p/each_page_bytes;
-
-    int n = base_offset;
-        int off = number + base_offset;
-        if(left_page_num + off < 0)
-            base_offset = 0;
-        else if(left_page_num + off + 1 > p)
-            base_offset = (p - 2)>0?p-2:0;
-        else{
-            base_offset += number;
-        }
-    //adjust offset
-    int n = base_offset;
-    int off = number + base_offset;
-    if(left_page_num + off < 0)
-        base_offset = 0;
-//    else if(left_page_num + off + 1 > book->numPages())
-//        base_offset = book->numPages() - 2;
-    else{
-        base_offset += number;
+        addBookBtn(bookmanager.getBookName());
+        rightPageStack->setCurrentWidget(bookMenu);
     }
-    //change page and the offset label in ui
-    ui->Offset->setText(QString::number(turnover(base_offset - n)));
-    return base_offset;
-    */
-    return 0;
-}
-
-void MainWindow::SetOffset(){
-    /*if(!book)
-        return;
-    //add quantity of book pages for now
-    AddPageNumber(book_page_num);*/
-}
-
-void MainWindow::SetOffsetTmp(){
-    /*if(!book)
-        return;
-    //minus quantity of book pages for now
-    AddPageNumber(-book_page_num);*/
 }
 
 void MainWindow::OpenImageConfigureWindow(){
@@ -325,6 +257,7 @@ void MainWindow::hideAllUIs(){
 
 void MainWindow::changeLightingMode(){
     isDayLighting = !isDayLighting;
+    ui->dayOrNight->setChecked(!isDayLighting);
     if(isDayLighting){
         ui->leftPage->setStyleSheet(dayLightStyle);
         ui->rightPage->setStyleSheet(dayLightStyle);
@@ -339,4 +272,227 @@ void MainWindow::changeLightingMode(){
         ui->rightUIBar->setStyleSheet(nightLightStyle);
         ui->bookName->setStyleSheet(nightLightStyle);
     }
+}
+
+void MainWindow::loadAllBookEntries(){
+    std::vector<Book*> books = bookmanager.getAllBooks();
+    if(books.size() == 0){
+        rightPageStack->setCurrentWidget(emptybookpage);
+        return;
+    }
+    for(Book* book : books){
+        addBookBtn(book->getName());
+    }
+    rightPageStack->setCurrentWidget(bookMenu);
+}
+
+void MainWindow::loadAllNoteEntries(){
+    std::vector<Note> notes = bookmanager.getAllNotes();
+    if(notes.size() == 0){
+        rightPageStack->setCurrentWidget(emptynotepage);
+        return;
+    }
+    noteMenu->resetEntries();
+    for(Note note : notes){
+        addNoteBtn(note.getNoteName());
+    }
+    rightPageStack->setCurrentWidget(noteMenu);
+}
+
+void MainWindow::addBookBtn(QString bookName){
+    QPushButton *btn = new QPushButton(this);
+    btn->setText(bookName);
+    btn->setStyleSheet("QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);}");
+    btn->setMinimumHeight(40);
+    btn->setMaximumHeight(40);
+    QObject::connect(btn, &QPushButton::clicked, this, &MainWindow::showBookInfoModal);
+    bookMenu->addEntry(btn);
+}
+
+void MainWindow::addNoteBtn(QString noteName){
+    QPushButton *btn = new QPushButton(this);
+    btn->setText(noteName);
+    btn->setStyleSheet("QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);}");
+    btn->setMinimumHeight(40);
+    btn->setMaximumHeight(40);
+    QObject::connect(btn, &QPushButton::clicked, this, &MainWindow::showNoteInfoModal);
+    noteMenu->addEntry(btn);
+}
+
+void MainWindow::backToRead(){
+    whitePanel->setHidden(true);
+    currentActive->setHidden(true);
+    if(currentActive == noteentryedit){
+        if(noteMenu == 0){
+            rightPageStack->setCurrentWidget(emptynotepage);
+        }
+    }
+    currentActive = NULL;
+    currentActiveName = "";
+}
+
+void MainWindow::leaveReading(QString name, QWidget *widget){
+    whitePanel->setMinimumHeight(this->size().height());
+    whitePanel->setMinimumWidth(this->size().width());
+    whitePanel->setHidden(false);
+    widget->setHidden(false);
+    currentActive = widget;
+    currentActiveName = name;
+}
+
+void MainWindow::selectBook(){
+    autoSaveNote();
+    leftPage->clearNote();
+    rightPage->clearNote();
+    bookmanager.switchBook(currentActiveName);
+    backToRead();
+    leftPageStack->setCurrentWidget(choosenotepage);
+    loadAllNoteEntries();
+}
+
+void MainWindow::selectNote(){
+    bookmanager.selectNote(currentActiveName);
+    backToRead();
+    leftPageStack->setCurrentWidget(leftPage);
+    rightPageStack->setCurrentWidget(rightPage);
+    startReading();
+}
+
+void MainWindow::createNewNote(){
+    if(noteMenu->getCount() == 0)
+        rightPageStack->setCurrentWidget(noteMenu);
+    QPushButton *btn = new QPushButton(this);
+    btn->setText(noteName);
+    btn->setStyleSheet("QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);}");
+    btn->setMinimumHeight(40);
+    btn->setMaximumHeight(40);
+    QRect rect = noteMenu->getNextGeometry(btn);
+
+    if(noteMenu->getCount() % entryPerPage > (entryPerPage / 2)){
+        noteentryeditupper->reset();
+        leaveReading("", noteentryeditupper);
+    }
+    else{
+        noteentryedit->reset();
+        leaveReading("", noteentryedit);
+    }
+}
+
+void MainWindow::addNote(){
+    if(noteentryedit->getName() == ""){
+        normalInformation("笔记名不得为空");
+        return;
+    }
+    if(bookmanager.addNote(noteentryedit->getName(), noteentryedit->getIntroduction()) < 0)
+        normalInformation("笔记已存在");
+    else
+       addNoteBtn(noteentryedit->getName());
+    backToRead();
+}
+
+void MainWindow::addNoteUp(){
+    if(noteentryeditupper->getName() == ""){
+        normalInformation("笔记名不得为空");
+        return;
+    }
+    if(bookmanager.addNote(noteentryeditupper->getName(), noteentryeditupper->getIntroduction()) < 0)
+        normalInformation("笔记已存在");
+    else
+       addNoteBtn(noteentryedit->getName());
+    backToRead();
+}
+
+void MainWindow::showBookInfoModal(){
+    QPushButton *sender = (QPushButton *)this->sender();
+    Book *book = bookmanager.getSingleBook(sender->text());
+    if(bookMenu->isTopHalf(sender)){
+        BookMetadata meta = book->getBookMetaData();
+        bookentrymodal->setName(book->getName());
+        bookentrymodal->setTime(meta.getLastReadTime());
+        bookentrymodal->setPage(meta.getLastReadPage(), meta.getBookPageCount());
+        bookentrymodal->setGeometry(sender->mapTo(this, this->pos()).x() - margin, sender->mapTo(this, this->pos()).y() - margin, sender->width() + margin, bookentrymodal->height());
+        QString sample = bookmanager.fetchLastReadFromBook(book->getName(), meta.getLastReadPage());
+        sample = sample.left(sampleNumber);
+        sample += "......";
+        bookentrymodal->setLastRead(sample);
+        leaveReading(book->getName(), bookentrymodal);
+    }
+    else{
+        BookMetadata meta = book->getBookMetaData();
+        bookentryuppermodal->setName(book->getName());
+        bookentryuppermodal->setTime(meta.getLastReadTime());
+        bookentryuppermodal->setPage(meta.getLastReadPage(), meta.getBookPageCount());
+        bookentrymodal->setGeometry(sender->mapTo(this, this->pos()).x() - margin, sender->mapTo(this, this->pos()).y() + bookentrymodal->height() - margin, sender->width() + margin, bookentrymodal->height());
+        leaveReading(book->getName(), bookentryuppermodal);
+    }
+}
+
+void MainWindow::showNoteInfoModal(){
+    QPushButton *sender = (QPushButton *)this->sender();
+    Note note = bookmanager.getSingleNote(sender->text());
+    if(noteMenu->isTopHalf(sender)){
+        noteentrymodal->setName(note.getNoteName());
+        QString intro = note.getIntroduction();
+        if(intro == "")
+            intro = tr("无");
+        noteentrymodal->setIntroduction(intro);
+        noteentrymodal->setTime(note.getLastModifiedTime());
+        noteentrymodal->setGeometry(sender->mapTo(this, this->pos()).x() - margin, sender->mapTo(this, this->pos()).y() - margin, sender->width() + margin, noteentrymodal->height());
+        leaveReading(note.getNoteName(), noteentrymodal);
+    }
+    else{
+        noteentryuppermodal->setName(note.getNoteName());
+        noteentryuppermodal->setIntroduction(note.getIntroduction());
+        noteentryuppermodal->setTime(note.getLastModifiedTime());
+        noteentrymodal->setGeometry(sender->mapTo(this, this->pos()).x() - margin, sender->mapTo(this, this->pos()).y() + noteentrymodal->height() - margin, sender->width() + margin, noteentrymodal->height());
+        leaveReading(note.getNoteName(), noteentryuppermodal);
+    }
+}
+
+void MainWindow::backToSelectBook(){
+    bookmanager.closeBook();
+    leftPageStack->setCurrentWidget(choosebookpage);
+    rightPageStack->setCurrentWidget(bookMenu);
+}
+
+void MainWindow::backToSelectNote(){
+    leftPageStack->setCurrentWidget(choosenotepage);
+    rightPageStack->setCurrentWidget(noteMenu);
+}
+
+void MainWindow::startReading(){
+    //leftPage->setContent();
+    int p = bookmanager.getLastRead();
+    baseOffset = p;
+    p += leftPageNumPhysical - 1;
+    leftPage->setContent(bookmanager.getBookPageWithPageNumber(p), p, bookmanager.getPageCount());
+    leftPage->setNote(bookmanager.getNotePageWithPageNumber(p));
+    rightPage->setContent(bookmanager.getBookPageWithPageNumber(p+1), p+1, bookmanager.getPageCount());
+    rightPage->setNote(bookmanager.getNotePageWithPageNumber(p+1));
+    leftPageStack->setCurrentWidget(leftPage);
+    rightPageStack->setCurrentWidget(rightPage);
+}
+
+void MainWindow::turnToPageWithLeftPageNumber(int p){
+    autoSaveNote();
+    int index = p - 1 + baseOffset;
+    bookmanager.setLastRead(index);
+    leftPage->setContent(bookmanager.getBookPageWithPageNumber(index), index, bookmanager.getPageCount());
+    leftPage->setNote(bookmanager.getNotePageWithPageNumber(index));
+    rightPage->setContent(bookmanager.getBookPageWithPageNumber(index+1), index+1, bookmanager.getPageCount());
+    rightPage->setNote(bookmanager.getNotePageWithPageNumber(index+1));
+}
+
+void MainWindow::turnToPageWithRightPageNumber(int p){
+    turnToPageWithLeftPageNumber(p - 1);
+}
+
+void MainWindow::autoSaveNote(){
+    int index = leftPageNumPhysical - 1 + baseOffset;
+    QImage img = leftPage->getNote();
+    if(!img.isNull())
+        bookmanager.storeNotePage(img, index);
+    img = rightPage->getNote();
+    if(!img.isNull())
+        bookmanager.storeNotePage(img, index + 1);
 }

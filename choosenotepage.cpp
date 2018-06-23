@@ -20,3 +20,11 @@ ChooseNotePage::~ChooseNotePage()
 {
     delete ui;
 }
+
+QPushButton *ChooseNotePage::addNoteBtn(){
+    return ui->addNote;
+}
+
+QPushButton *ChooseNotePage::returnBtn(){
+    return ui->backToBookChoose;
+}

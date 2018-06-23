@@ -1,6 +1,6 @@
 #include "imageconfig.h"
 #include "ui_imageconfig.h"
-
+#include <thread>
 #include <iostream>
 using namespace std;
 using namespace cv;
@@ -40,7 +40,10 @@ ImageConfig::ImageConfig(QMainWindow *parent) :
 
     theTimer.start(33);
 
-    capTop >> rectMat;
+    QString fileName = QFileDialog::getOpenFileName(this, NULL, NULL, "*.bmp *.jpeg *.png *.jpeg 2000 *.gif *.jpg *.mp4");
+       if (fileName == NULL) return;
+       rectMat = imread(fileName.toStdString());
+    //capTop >> rectMat;
     cvtColor(rectMat, rectMat, CV_RGB2RGBA);
     rectLabel = ui->image;
     rectQImage = ShowImage(rectMat, rectLabel);

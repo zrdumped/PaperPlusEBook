@@ -46,36 +46,15 @@ void Menu::addEntry(QWidget *newEntry){
     changeUI();
 }
 
-void Menu::addEntries(std::vector<QWidget *> newEntries){
-    int appended = entriesPerPage - (entries.size() % entriesPerPage);
-    appended %= entriesPerPage;
-    entries.insert(entries.end(), newEntries.begin(), newEntries.end());
-    if(currentPageIndex != pages - 1){
-        for(auto newEntry : newEntries){
-            newEntry->setHidden(true);
-        }
-    }
-    else{
-        int i, end = newEntries.size();
-        appended = (end < appended) ? end : appended;
-        for(i = 0; i < appended; i++){
-            newEntries[i]->setHidden(false);
-        }
-        for(; i < end; i ++){
-            newEntries[i]->setHidden(true);
-        }
-    }
-    pages = (entries.size() + entriesPerPage - 1) / entriesPerPage;
+void Menu::resetEntries(){
     QLayout *tablelayout = ui->entryTable->layout();
-    for(auto newEntry : newEntries){
-        tablelayout->addWidget(newEntry);
+    currentPageIndex = 0;
+    pages = 0;
+    for(QWidget * w: entries){
+        w->setParent(NULL);
+        tablelayout->removeWidget(w);
     }
-    changeUI();
-}
-
-void Menu::removeEntry(QWidget *newEntry){
-    QLayout *tablelayout = ui->entryTable->layout();
-    tablelayout->removeWidget(newEntry);
+    entries.clear();
 }
 
 void Menu::changeUI(){
@@ -160,5 +139,38 @@ void Menu::gotoLastPage(){
             entries[i]->setHidden(false);
         }
         changeUI();
+    }
+}
+
+int Menu::getCount(){
+    return entries.size();
+}
+
+bool Menu::isTopHalf(QWidget *entry){
+    int end = (pages == currentPageIndex + 1) ? entries.size() : (currentPageIndex + 1) * entriesPerPage;
+    int i;
+    for(i = currentPageIndex * entriesPerPage; i < end; i ++){
+        if(entries[i] == entry){
+            break;
+        }
+    }
+    return (i - currentPageIndex * entriesPerPage) < (entriesPerPage / 2);
+}
+
+QRect Menu::getNextGeometry(QPushButton *btn){
+    int num = (pages == currentPageIndex + 1) ? entries.size() - currentPageIndex * entriesPerPage : entriesPerPage;
+    QLayout *tablelayout = ui->entryTable->layout();
+    if(num == entriesPerPage){
+        QRect rect = entries[currentPageIndex * entriesPerPage]->geometry();
+        btn->setParent(NULL);
+        tablelayout->removeWidget(w);
+        return rect;
+    }
+    else{
+        tablelayout->addWidget(btn);
+        QRect rect = btn->geometry();
+        btn->setParent(NULL);
+        tablelayout->removeWidget(w);
+        return rect;
     }
 }

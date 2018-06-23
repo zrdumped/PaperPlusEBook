@@ -18,6 +18,10 @@ public:
     void seekg(unsigned int pos);
     QChar getCharWithDecoded();
     int read(QChar *c, int size);
+    QString readsome(int charSize);
+    bool is_open();
+    void clear();
+    unsigned int tellend();
 private:
     std::ifstream f;
     FileCode codeType;

@@ -16,3 +16,7 @@ ChooseBookPage::~ChooseBookPage()
 {
     delete ui;
 }
+
+QPushButton *ChooseBookPage::addBookBtn(){
+    return ui->addBook;
+}
