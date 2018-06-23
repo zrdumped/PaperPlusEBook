@@ -56,15 +56,15 @@ MainWindow::MainWindow(QWidget *parent) :
     //pen
     icon = ui->penUI->icon();
     ui->penUI->setIconSize(QSize(iconSideLength, iconSideLength));
-    icon.addPixmap(QPixmap(":/icons/pencil.png"), QIcon::Normal);
-    icon.addPixmap(QPixmap(":/icons/pencilSelected.png"), QIcon::Selected);
+    icon.addPixmap(QPixmap(":/icons/pencil.png"), QIcon::Normal, QIcon::Off);
+    icon.addPixmap(QPixmap(":/icons/pencilSelected.png"), QIcon::Normal, QIcon::On);
     ui->penUI->setIcon(icon);
     ui->penUI->setHidden(true);
     //eraser
     icon = ui->eraserUI->icon();
     ui->eraserUI->setIconSize(QSize(iconSideLength, iconSideLength));
-    icon.addPixmap(QPixmap(":/icons/eraser.png"), QIcon::Normal);
-    icon.addPixmap(QPixmap(":/icons/eraserSelected.png"), QIcon::Selected);
+    icon.addPixmap(QPixmap(":/icons/eraser.png"), QIcon::Normal, QIcon::Off);
+    icon.addPixmap(QPixmap(":/icons/eraserSelected.png"), QIcon::Normal, QIcon::On);
     ui->eraserUI->setIcon(icon);
     ui->eraserUI->setHidden(true);
     //page offset setter
@@ -362,17 +362,17 @@ void MainWindow::createNewNote(){
     if(noteMenu->getCount() == 0)
         rightPageStack->setCurrentWidget(noteMenu);
     QPushButton *btn = new QPushButton(this);
-    btn->setText(noteName);
     btn->setStyleSheet("QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);}");
     btn->setMinimumHeight(40);
     btn->setMaximumHeight(40);
-    QRect rect = noteMenu->getNextGeometry(btn);
-
+    QRect rect = noteMenu->getNextGeometry(btn, this);
     if(noteMenu->getCount() % entryPerPage > (entryPerPage / 2)){
         noteentryeditupper->reset();
         leaveReading("", noteentryeditupper);
     }
     else{
+        //noteentryedit->setGeometry(rect.x() - margin, rect.y() - margin, rect.width() + margin, rect.height());
+
         noteentryedit->reset();
         leaveReading("", noteentryedit);
     }
@@ -483,10 +483,6 @@ void MainWindow::turnToPageWithLeftPageNumber(int p){
     rightPage->setNote(bookmanager.getNotePageWithPageNumber(index+1));
 }
 
-void MainWindow::turnToPageWithRightPageNumber(int p){
-    turnToPageWithLeftPageNumber(p - 1);
-}
-
 void MainWindow::autoSaveNote(){
     int index = leftPageNumPhysical - 1 + baseOffset;
     QImage img = leftPage->getNote();
@@ -495,4 +491,16 @@ void MainWindow::autoSaveNote(){
     img = rightPage->getNote();
     if(!img.isNull())
         bookmanager.storeNotePage(img, index + 1);
+}
+
+void MainWindow::usePen(){
+    ui->penUI->setChecked(true);
+    leftPage->setPainter(penColor, penWidth);
+    rightPage->setPainter(penColor, penWidth);
+}
+
+void MainWindow::useEraser(){
+    ui->eraserUI->setChecked(true);
+    leftPage->setPainter(Qt::transparent, eraserWidth);
+    rightPage->setPainter(Qt::transparent, eraserWidth);
 }

@@ -21,11 +21,14 @@ public:
     void setNote(QImage img);
     QImage getNote();
     void clearNote();
+    void setPainter(QColor color, int width);
 private:
     Ui::SinglePage *ui;
     QLabel *note;
     QImage noteImage;
     int totalPageNumber = 0;
+    QColor painterColor;
+    int painterWidth = 0;
 protected:
     void mousePressEvent(QMouseEvent *event);
 };

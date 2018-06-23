@@ -59,7 +59,22 @@ void SinglePage::clearNote(){
     note->setPixmap(QPixmap());
 }
 
+void SinglePage::setPainter(QColor color, int width){
+    painterColor = color;
+    painterWidth = width;
+}
+
 void SinglePage::mousePressEvent(QMouseEvent *event){
-    noteImage.setPixelColor(note->mapFromGlobal(event->pos()), Qt::red);
+    int x = QCursor::pos().x();
+    int y = QCursor::pos().y();
+    int xend = noteImage.width();
+    xend = (xend > x + painterWidth)?x + painterWidth : xend;
+    int yend = noteImage.height();
+    yend = (yend > y + painterWidth)?y + painterWidth : yend;
+    for(int i = x; i < xend; i ++){
+        for(int j = y; j < yend; j ++){
+            noteImage.setPixelColor(note->mapFromGlobal(QPoint(i, j)), painterColor);
+        }
+    }
     note->setPixmap(QPixmap::fromImage(noteImage));
 }
