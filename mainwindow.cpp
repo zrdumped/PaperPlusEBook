@@ -9,6 +9,10 @@
 #include <QFileDialog>
 #include <QLabel>
 #include <QFrame>
+#include <QDesktopWidget>
+#include <QCursor>
+
+//454545,3C3C3C
 /*
  * Menu: QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);} minimum height: 40px
  */
@@ -17,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    window = NULL;
+    QDesktopWidget *desktop = QApplication::desktop();
+    int screen_count = desktop->screenCount();
+    int width = desktop->width() / screen_count;
     //set QZxing side lengths
     ui->leftQZxing->setMinimumWidth(qzxingSideLength);
     ui->rightQZxing->setMinimumWidth(qzxingSideLength);
@@ -41,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->imageConfigure->setIconSize(QSize(iconSideLength, iconSideLength));
     icon.addPixmap(QPixmap(":/icons/imageConfigure.png"), QIcon::Normal);
     ui->imageConfigure->setIcon(icon);
-    ui->imageConfigure->setHidden(true);
+    //ui->imageConfigure->setHidden(true);
     //book selector
     icon = ui->bookSelector->icon();
     ui->bookSelector->setIconSize(QSize(iconSideLength, iconSideLength));
@@ -58,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
     icon = ui->penUI->icon();
     ui->penUI->setIconSize(QSize(iconSideLength, iconSideLength));
     icon.addPixmap(QPixmap(":/icons/pencil.png"), QIcon::Normal, QIcon::Off);
-    icon.addPixmap(QPixmap(":/icons/pencilSelected.png"), QIcon::Normal, QIcon::On);
+    icon.addPixmap(QPixmap(":/icons/pencil.png"), QIcon::Normal, QIcon::On);
     ui->penUI->setIcon(icon);
     ui->penUI->setCheckable(true);
     ui->penUI->setChecked(false);
@@ -67,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
     icon = ui->eraserUI->icon();
     ui->eraserUI->setIconSize(QSize(iconSideLength, iconSideLength));
     icon.addPixmap(QPixmap(":/icons/eraser.png"), QIcon::Normal, QIcon::Off);
-    icon.addPixmap(QPixmap(":/icons/eraserSelected.png"), QIcon::Normal, QIcon::On);
+    icon.addPixmap(QPixmap(":/icons/eraser.png"), QIcon::Normal, QIcon::On);
     ui->eraserUI->setIcon(icon);
     ui->eraserUI->setCheckable(true);
     ui->eraserUI->setChecked(false);
@@ -116,6 +124,15 @@ MainWindow::MainWindow(QWidget *parent) :
     //pages
     leftPage = new SinglePage(this);
     rightPage = new SinglePage(this);
+    //fix page and ui bar size
+
+    int pageWidth = (width - middlePaddingWidth - sidePaddingWidth * 2) / 2;
+    ui->leftPage->setMinimumWidth(pageWidth);
+    ui->rightPage->setMinimumWidth(pageWidth);
+     ui->leftFrame->setMinimumWidth(pageWidth);
+     ui->rightFrame->setMinimumWidth(pageWidth);
+    ui->leftUpBar->setMinimumHeight(qzxingSideLength);
+    ui->rightUpBar->setMinimumHeight(qzxingSideLength);
     //setup page layout
     ui->leftPage->setLayout(new QStackedLayout(ui->leftPage));
     ui->rightPage->setLayout(new QStackedLayout(ui->rightPage));
@@ -131,6 +148,7 @@ MainWindow::MainWindow(QWidget *parent) :
     rightPageStack->addWidget(rightPage);
     rightPageStack->addWidget(bookMenu);
     rightPageStack->addWidget(noteMenu);
+
     //rightPGLayout->addWidget(choosebookpage);
     //ui->leftPage->setLayout(leftPGLayout);
     //eraserStyle
@@ -185,7 +203,9 @@ MainWindow::MainWindow(QWidget *parent) :
     leftPageStack->setCurrentWidget(choosebookpage);
     //load book menu
     loadAllBookEntries();
-    this->showMaximized();
+    this->showFullScreen();
+usePen();
+
 }
 
 MainWindow::~MainWindow()
@@ -235,12 +255,6 @@ void MainWindow::createNewBook(){
 }
 
 void MainWindow::OpenImageConfigureWindow(){
-    QFrame *frame = new QFrame(this);
-    frame->setGeometry(160,160,this->size().height(),this->size().width()-320);
-    frame->setMinimumHeight(this->size().height());
-    frame->setMinimumWidth(this->size().width()-320);
-    frame->setStyleSheet("background-color:rgb(255,255,255,255);");
-    frame->setHidden(false);
     window = new ImageConfig(this);
     window->show();
 }
@@ -264,7 +278,7 @@ void MainWindow::hideAllUIs(){
     ui->eraserUI->setHidden(true);
     ui->penUI->setHidden(true);
     ui->pageOffsetSetter->setHidden(true);
-    ui->imageConfigure->setHidden(true);
+    //ui->imageConfigure->setHidden(true);
 }
 
 void MainWindow::changeLightingMode(){
@@ -276,6 +290,33 @@ void MainWindow::changeLightingMode(){
         ui->leftUIBar->setStyleSheet(dayLightStyle);
         ui->rightUIBar->setStyleSheet(dayLightStyle);
         ui->bookName->setStyleSheet(dayLightStyle);
+        ui->middlePadding->setStyleSheet(dayLightStyle);
+        ui->middleUpPadding->setStyleSheet(dayLightStyle);
+        QIcon icon = ui->imageConfigure->icon();
+        icon.addPixmap(QPixmap(":/icons/imageConfigure.png"), QIcon::Normal);
+        ui->imageConfigure->setIcon(icon);
+        //book selector
+        icon = ui->bookSelector->icon();
+        icon.addPixmap(QPixmap(":/icons/books.png"), QIcon::Normal);
+        ui->bookSelector->setIcon(icon);
+        //note selector
+        icon = ui->noteSelector->icon();
+        icon.addPixmap(QPixmap(":/icons/notes.png"), QIcon::Normal);
+        ui->noteSelector->setIcon(icon);
+        //pen
+        icon = ui->penUI->icon();
+        icon.addPixmap(QPixmap(":/icons/pencil.png"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/icons/pencil.png"), QIcon::Normal, QIcon::On);
+        ui->penUI->setIcon(icon);
+        //eraser
+        icon = ui->eraserUI->icon();
+        icon.addPixmap(QPixmap(":/icons/eraser.png"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/icons/eraser.png"), QIcon::Normal, QIcon::On);
+        ui->eraserUI->setIcon(icon);
+        //page offset setter
+        icon = ui->pageOffsetSetter->icon();
+        icon.addPixmap(QPixmap(":/icons/offset.png"), QIcon::Normal);
+        ui->pageOffsetSetter->setIcon(icon);
     }
     else{
         ui->leftPage->setStyleSheet(nightLightStyle);
@@ -283,6 +324,34 @@ void MainWindow::changeLightingMode(){
         ui->leftUIBar->setStyleSheet(nightLightStyle);
         ui->rightUIBar->setStyleSheet(nightLightStyle);
         ui->bookName->setStyleSheet(nightLightStyle);
+        ui->middlePadding->setStyleSheet(nightLightStyle);
+        ui->middleUpPadding->setStyleSheet(nightLightStyle);
+
+        QIcon icon = ui->imageConfigure->icon();
+        icon.addPixmap(QPixmap(":/icons/imageConfigure-n.png"), QIcon::Normal);
+        ui->imageConfigure->setIcon(icon);
+        //book selector
+        icon = ui->bookSelector->icon();
+        icon.addPixmap(QPixmap(":/icons/books-n.png"), QIcon::Normal);
+        ui->bookSelector->setIcon(icon);
+        //note selector
+        icon = ui->noteSelector->icon();
+        icon.addPixmap(QPixmap(":/icons/notes-n.png"), QIcon::Normal);
+        ui->noteSelector->setIcon(icon);
+        //pen
+        icon = ui->penUI->icon();
+        icon.addPixmap(QPixmap(":/icons/pencil-n.png"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/icons/pencil-n.png"), QIcon::Normal, QIcon::On);
+        ui->penUI->setIcon(icon);
+        //eraser
+        icon = ui->eraserUI->icon();
+        icon.addPixmap(QPixmap(":/icons/eraser-n.png"), QIcon::Normal, QIcon::Off);
+        icon.addPixmap(QPixmap(":/icons/eraser-n.png"), QIcon::Normal, QIcon::On);
+        ui->eraserUI->setIcon(icon);
+        //page offset setter
+        icon = ui->pageOffsetSetter->icon();
+        icon.addPixmap(QPixmap(":/icons/offset-n.png"), QIcon::Normal);
+        ui->pageOffsetSetter->setIcon(icon);
     }
 }
 
@@ -317,6 +386,7 @@ void MainWindow::addBookBtn(QString bookName){
     btn->setStyleSheet("QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);}");
     btn->setMinimumHeight(40);
     btn->setMaximumHeight(40);
+    btn->setFont(QFont("Microsoft YaHei", 16, 55));
     QObject::connect(btn, &QPushButton::clicked, this, &MainWindow::showBookInfoModal);
     bookMenu->addEntry(btn);
 }
@@ -327,6 +397,7 @@ void MainWindow::addNoteBtn(QString noteName){
     btn->setStyleSheet("QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border: 1px rgb(179, 208, 255);}");
     btn->setMinimumHeight(40);
     btn->setMaximumHeight(40);
+    btn->setFont(QFont("Microsoft YaHei", 16, 55));
     QObject::connect(btn, &QPushButton::clicked, this, &MainWindow::showNoteInfoModal);
     noteMenu->addEntry(btn);
 }
@@ -357,7 +428,9 @@ void MainWindow::selectBook(){
     leftPage->clearNote();
     rightPage->clearNote();
     bookmanager.switchBook(currentActiveName);
+    leftPageNumPhysical = 0;
     backToRead();
+    choosenotepage->setBookName(currentActiveName);
     leftPageStack->setCurrentWidget(choosenotepage);
     loadAllNoteEntries();
 }
@@ -420,11 +493,10 @@ void MainWindow::showBookInfoModal(){
     if(bookMenu->isTopHalf(sender)){
         BookMetadata meta = book->getBookMetaData();
         bookentrymodal->setName(book->getName());
+        bookentrymodal->setFont(QFont("Microsoft YaHei", 16, 55));
         bookentrymodal->setTime(meta.getLastReadTime());
         bookentrymodal->setPage(meta.getLastReadPage(), meta.getBookPageCount());
-        std::cout<<"pos:"<<sender->mapTo(this, sender->pos()).y()<<std::endl;
-        bookentrymodal->setGeometry(sender->mapTo(this, sender->pos()).x() - margin, sender->mapTo(this, sender->pos()).y() - 100-margin, sender->width() + margin, bookentrymodal->height());
-       std::cout<<bookentrymodal->y()<<std::endl;
+        bookentrymodal->setGeometry(sender->mapTo(this, sender->pos()).x() - margin, sender->mapTo(this, sender->pos()).y() -margin, sender->width() + margin, bookentrymodal->height());
         QString sample = bookmanager.fetchLastReadFromBook(book->getName(), meta.getLastReadPage());
         sample = sample.left(sampleNumber);
         sample += "......";
@@ -451,6 +523,8 @@ void MainWindow::showNoteInfoModal(){
             intro = tr("None");
         noteentrymodal->setIntroduction(intro);
         noteentrymodal->setTime(note.getLastModifiedTime());
+        bookentrymodal->setFont(QFont("Microsoft YaHei", 16, 55));
+
         noteentrymodal->setGeometry(sender->mapTo(this, sender->pos()).x() - margin, sender->mapTo(this, sender->pos()).y() - margin, sender->width() + margin, noteentrymodal->height());
         leaveReading(note.getNoteName(), noteentrymodal);
     }
@@ -465,6 +539,13 @@ void MainWindow::showNoteInfoModal(){
 
 void MainWindow::backToSelectBook(){
     hideAllUIs();
+    QDesktopWidget *desktop = QApplication::desktop();
+    int screen_count = desktop->screenCount();
+    if(screen_count > 1){
+    this->showNormal();
+    this->setGeometry(desktop->screenGeometry(1).x(), desktop->screenGeometry(1).y(), this->width(), this->height());
+    this->showFullScreen();
+    }
     bookmanager.closeBook();
     leftPageStack->setCurrentWidget(choosebookpage);
     rightPageStack->setCurrentWidget(bookMenu);
@@ -472,6 +553,13 @@ void MainWindow::backToSelectBook(){
 
 void MainWindow::backToSelectNote(){
     hideAllUIs();
+    QDesktopWidget *desktop = QApplication::desktop();
+    int screen_count = desktop->screenCount();
+    if(screen_count > 1){
+    this->showNormal();
+    this->setGeometry(desktop->screenGeometry(1).x(), desktop->screenGeometry(1).y(), this->width(), this->height());
+    this->showFullScreen();
+    }
     leftPageStack->setCurrentWidget(choosenotepage);
     rightPageStack->setCurrentWidget(noteMenu);
 }
@@ -479,6 +567,12 @@ void MainWindow::backToSelectNote(){
 void MainWindow::startReading(){
     //leftPage->setContent();
     showAllUIs();
+    if(!isCalibration){
+        isCalibration = 1;
+
+        OpenImageConfigureWindow();
+    }
+    ui->bookName->setText(bookmanager.getBookName());
     int p = bookmanager.getLastRead();
     baseOffset = p;
     p += leftPageNumPhysical - 1;
@@ -488,20 +582,46 @@ void MainWindow::startReading(){
     rightPage->setNote(bookmanager.getNotePageWithPageNumber(p+1));
     leftPageStack->setCurrentWidget(leftPage);
     rightPageStack->setCurrentWidget(rightPage);
+    this->showNormal();
+    QDesktopWidget *desktop = QApplication::desktop();
+    int screen_count = desktop->screenCount();
+    if(screen_count > 1){
+        this->setGeometry(desktop->screenGeometry(0).x()+9, desktop->screenGeometry(0).y()+9, this->width(), this->height());
+    }
+    this->showFullScreen();
 }
 
 void MainWindow::turnToPageWithLeftPageNumber(int p){
-    autoSaveNote();
-    int index = p - 1 + baseOffset;
-    bookmanager.setLastRead(index);
-    leftPage->setContent(bookmanager.getBookPageWithPageNumber(index), index, bookmanager.getPageCount());
-    leftPage->setNote(bookmanager.getNotePageWithPageNumber(index));
-    rightPage->setContent(bookmanager.getBookPageWithPageNumber(index+1), index+1, bookmanager.getPageCount());
-    rightPage->setNote(bookmanager.getNotePageWithPageNumber(index+1));
+    if(rightPageStack && rightPageStack->currentWidget() == rightPage){
+        if(p <= 0 || p >bookmanager.getPageCount()){
+           return;
+        }
+        std::cout<<"pageno: "<<p<<std::endl;
+        if(leftPageNumPhysical == p)
+            return;
+        autoSaveNote();
+        leftPageNumPhysical = p;
+        int index = p - 1 + baseOffset;
+        std::cout<<"gonna read index: "<<index<<std::endl;
+        bookmanager.setLastRead(index);
+        std::cout<<"left ok: "<<index<<std::endl;
+        leftPage->setContent(bookmanager.getBookPageWithPageNumber(index), index, bookmanager.getPageCount());
+        std::cout<<bookmanager.getBookPageWithPageNumber(index).toStdString()<<std::endl;
+        std::cout<<"left ok: "<<index<<std::endl;
+        leftPage->setNote(bookmanager.getNotePageWithPageNumber(index));
+        std::cout<<"left ok: "<<index<<std::endl;
+
+        rightPage->setContent(bookmanager.getBookPageWithPageNumber(index+1), index+1, bookmanager.getPageCount());
+        rightPage->setNote(bookmanager.getNotePageWithPageNumber(index+1));
+         std::cout<<"right ok: "<<index<<std::endl;
+    }
 }
 
 void MainWindow::autoSaveNote(){
     int index = leftPageNumPhysical - 1 + baseOffset;
+    if(index <= 0)
+        return;
+    std::cout<<"savewithindex: "<<index<<std::endl;
     QImage img = leftPage->getNote();
     if(!img.isNull())
         bookmanager.storeNotePage(img, index);
@@ -512,12 +632,52 @@ void MainWindow::autoSaveNote(){
 
 void MainWindow::usePen(){
     ui->penUI->setChecked(true);
+
+    ui->eraserUI->setChecked(false);
     leftPage->setPainter(penColor, penWidth);
     rightPage->setPainter(penColor, penWidth);
 }
 
 void MainWindow::useEraser(){
     ui->eraserUI->setChecked(true);
+     ui->penUI->setChecked(false);
     leftPage->setPainter(Qt::transparent, eraserWidth);
     rightPage->setPainter(Qt::transparent, eraserWidth);
+}
+
+void MainWindow::simulateClick(int x, int y){
+   std::cout<<"tryclick x: "<<x<<"y: "<<y<<std::endl;
+    QPoint pos;
+    x += sidePaddingWidth;
+    pos.setY(y - qzxingSideLength);
+    QMouseEvent *mEvnPress;
+    QMouseEvent *mEvnRelease;
+    QDesktopWidget *desktop = QApplication::desktop();
+    int width = desktop->screenGeometry(1).width();
+    int pageWidth = (width - middlePaddingWidth - sidePaddingWidth * 2) / 2;
+    std::cout<<"width"<<width<<"pagewidth"<<pageWidth<<std::endl;
+    if(x > sidePaddingWidth && x < sidePaddingWidth + pageWidth){
+        x -= sidePaddingWidth;
+        pos.setX(x );
+        mEvnPress = new QMouseEvent(QEvent::MouseButtonPress, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(leftPage, mEvnPress);
+        mEvnRelease = new QMouseEvent(QEvent::MouseButtonRelease, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(leftPage, mEvnRelease);
+    }
+    else if(x > width - (sidePaddingWidth + pageWidth) && x < width - sidePaddingWidth){
+        x -= width - (sidePaddingWidth + pageWidth);
+        pos.setX(x );
+        mEvnPress = new QMouseEvent(QEvent::MouseButtonPress, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(rightPage, mEvnPress);
+        mEvnRelease = new QMouseEvent(QEvent::MouseButtonRelease, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(rightPage, mEvnRelease);
+    }
+   // std::cout<<QWidget::focusWidget()->mapToGlobal(QPoint(0,0)).x()<<std::endl;
+
+
+}
+
+void MainWindow::simulateFly(){
+    leftPage->cleanDotHistory();
+    rightPage->cleanDotHistory();
 }

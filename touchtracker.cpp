@@ -20,7 +20,7 @@ using namespace std;
 #define TT_DEBUG
 
 // The slope of the line to detect shadow
-const float slope = 200.0f/662.0f;
+const float slope = 50.0f/662.0f;
 // The width of line expected to be black to return true for checkTouch
 const int expect = 20;
 static Ptr<Tracker> trackerp, trackers;
@@ -38,7 +38,8 @@ TouchTracker::TouchTracker()
 int TouchTracker::testTouchPlus()
 {
     // #1 - open video
-    VideoCapture video(0);
+    //VideoCapture video(VIDEO_IN+".mp4");
+    VideoCapture video(3);
     if(!video.isOpened()) {
         cout << "TouchTracker: could not locate video file "
              << VIDEO_IN + ".mp4, check macro VIDEO_IN" << endl;
@@ -66,17 +67,19 @@ int TouchTracker::testTouchPlus()
     }
 #else
     while (video.read(frame)) {
+        //resize(frame, frame, Size(320, 240), 0, 0);
         int key = waitKey(1);
         if (key == 27)
             break;
         imshow("Touch Tracking", frame);
     }
-    initTouchIntoDisk(, frame);
+    initTouchIntoDisk(frame);
 #endif
 
     // #3 - loop for each frame
     bool verbose = true;
     while (video.read(frame)) {
+        //resize(frame, frame, Size(360, 240), 0, 0);
         int key = waitKey(1);
         if(key == 27)
             break;
@@ -167,11 +170,13 @@ void TouchTracker::initTouch(Mat frame)
 
 void TouchTracker::initTouch(Rect2d boxp, Mat frame)
 {
+    //resize(frame, frame, Size(480, 360), 0, 0);
     trackerp = getTracker(TRACKER_TYPE);
     trackerp->init(frame, boxp);
 
     Mat imgp = Mat::Mat(frame, boxp);
     cvtColor(imgp, imgp, CV_BGR2GRAY);
+    blur(imgp, imgp, Size(6, 6));
     threshold(imgp, imgp, 0, 255, CV_THRESH_OTSU);
     findNib(imgp, offpx, offpy);
 }
@@ -201,6 +206,7 @@ void TouchTracker::initTouchFromDisk()
 void TouchTracker::initTouchIntoDisk(Mat frame)
 {
     Rect2d boxp;
+    //resize(frame, frame, Size(480, 360), 0, 0);
     boxp = selectROI(frame, false);
     destroyWindow("ROI selector");
 
@@ -223,7 +229,7 @@ bool TouchTracker::checkTouch(Mat frame, bool verbose)
     if (verbose)
         timer = (double)getTickCount();
 #endif
-
+    //resize(frame, frame, Size(480, 360), 0, 0);
     Rect2d boxp;
     bool okp = trackerp->update(frame, boxp);
 
@@ -238,6 +244,11 @@ bool TouchTracker::checkTouch(Mat frame, bool verbose)
         if (boxp.width + boxp.x >= frame.cols || boxp.height + boxp.y >= frame.rows)
             return false;
 
+        Mat mat = Mat::Mat(frame, boxp);
+        cvtColor(mat, mat, CV_BGR2GRAY);
+        threshold(mat, mat, 0, 255, CV_THRESH_OTSU);
+        float row = mat.rows + offpy - (mat.cols + offpx) * slope;
+
 #ifdef TT_DEBUG
         if (verbose) {
             Point p1 = Point(boxp.x + boxp.width + offpx, boxp.y + boxp.height + offpy),
@@ -250,10 +261,6 @@ bool TouchTracker::checkTouch(Mat frame, bool verbose)
             line(frame, p3, p1, CV_RGB(255, 0, 0), 2);
         }
 #endif
-        Mat mat = Mat::Mat(frame, boxp);
-        cvtColor(mat, mat, CV_BGR2GRAY);
-        threshold(mat, mat, 0, 255, CV_THRESH_OTSU);
-        float row = mat.rows + offpy - (mat.cols + offpx) * slope;
 
         for (int col = 0; col < expect; col++) {
             uchar *data = mat.ptr<uchar>((int)row);
@@ -321,7 +328,21 @@ void TouchTracker::findNib(Mat mat, int &x, int &y)
         }
     }
 }
-
+void TouchTracker::findNibLeft(Mat mat, int &x, int &y)
+{
+    for (int i = 0; i < mat.cols; i++)
+    {
+        for (int j = mat.rows - 1; j >= 0; j--)
+        {
+            if (mat.at<uchar>(j, i) == 0)
+            {
+                x = i;
+                y = j;
+                return;
+            }
+        }
+    }
+}
 /********************************************
  * Deprecated part
  ********************************************/

@@ -24,5 +24,25 @@
         <file>icons/return.png</file>
         <file>icons/ok_white.png</file>
         <file>icons/return_white.png</file>
+        <file>icons/books-hover.png</file>
+        <file>icons/books-n.png</file>
+        <file>icons/books-nhover.png</file>
+        <file>icons/eraser-hover.png</file>
+        <file>icons/eraser-n.png</file>
+        <file>icons/eraser-nhover.png</file>
+        <file>icons/imageConfigure-hover.png</file>
+        <file>icons/imageConfigure-n.png</file>
+        <file>icons/imageConfigure-nhover.png</file>
+        <file>icons/moon-hover.png</file>
+        <file>icons/notes-hover.png</file>
+        <file>icons/notes-n.png</file>
+        <file>icons/notes-nhover.png</file>
+        <file>icons/offset-hover.png</file>
+        <file>icons/offset-n.png</file>
+        <file>icons/offset-nhover.png</file>
+        <file>icons/pencil-hover.png</file>
+        <file>icons/pencil-n.png</file>
+        <file>icons/pencil-nhover.png</file>
+        <file>icons/sun-hover.png</file>
     </qresource>
 </RCC>

@@ -22,10 +22,13 @@ public:
     QImage getNote();
     void clearNote();
     void setPainter(QColor color, int width);
+    void cleanDotHistory();
 private:
     Ui::SinglePage *ui;
     QLabel *note;
     QImage noteImage;
+    QPoint lastPoint;
+    QPoint thisPoint;
     int totalPageNumber = 0;
     QColor painterColor;
     int painterWidth = 0;

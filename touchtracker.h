@@ -23,6 +23,8 @@ public:
     static void initTouchIntoDisk(Mat frame);
 
     static bool checkTouch(Mat frame, bool verbose = true);
+    static void findNib(Mat mat, int &x, int &y);
+    static void findNibLeft(Mat mat, int &x, int &y);
 
 #ifdef FF_DEPRECATED
     static int example();
@@ -35,7 +37,6 @@ public:
 private:
     TouchTracker();
     static cv::Ptr<cv::Tracker> getTracker(int type);
-    static void findNib(Mat mat, int &x, int &y);
 };
 
 #endif // TOUCHTRACKER_H

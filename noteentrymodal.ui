@@ -60,6 +60,11 @@ color: rgb(255, 255, 255);</string>
           <height>20</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>上次编辑：</string>
         </property>
@@ -76,6 +81,11 @@ color: rgb(255, 255, 255);</string>
           <height>20</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -91,6 +101,11 @@ color: rgb(255, 255, 255);</string>
           <width>16777215</width>
           <height>20</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
         </property>
         <property name="text">
          <string>笔记简介：</string>
@@ -135,6 +150,11 @@ color: rgb(255, 255, 255);</string>
              <height>40</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
            <property name="styleSheet">
             <string notr="true">QPushButton{background-color: rgb(14, 0, 100); border-radius: 20px;  border:2px solid white;}</string>
            </property>
@@ -151,6 +171,11 @@ color: rgb(255, 255, 255);</string>
              <height>40</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
            <property name="styleSheet">
             <string notr="true">QPushButton{background-color: rgb(14, 0, 100); border-radius: 20px;  border:2px solid white;}</string>
            </property>
@@ -164,6 +189,11 @@ color: rgb(255, 255, 255);</string>
       </item>
       <item row="2" column="0" colspan="2">
        <widget class="QLabel" name="introduction">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -201,6 +231,11 @@ color: rgb(255, 255, 255);</string>
        <width>0</width>
        <height>40</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">QPushButton{background-color: rgb(179, 208, 255); border-radius: 20px;  border:2px solid rgb(14, 0, 100);color:black;}</string>

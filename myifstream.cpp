@@ -159,12 +159,15 @@ int MyIfstream::read(QChar *c, int size){
 }
 
 QString MyIfstream::readsome(int charSize){
+    std::cout<<"get here!!!"<<charSize<<std::endl;
     if(f.eof())
         return "";
     QString s = "";
+    std::cout<<"get here!!!!!"<<std::endl;
     for(int i = 0; i < charSize; i++){
         s += getCharWithDecoded();
     }
+    std::cout<<"get here!!!!"<<std::endl;
     return s;
 }
 

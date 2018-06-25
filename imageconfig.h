@@ -31,6 +31,8 @@ class ImageConfig : public QMainWindow
 public:
     explicit ImageConfig(QMainWindow *parent = 0);
     ~ImageConfig();
+    bool CaliRect = false;
+    bool CaliPen = false;
 
 private:
     Ui::ImageConfig *ui;
@@ -41,6 +43,7 @@ private:
     calibration clb = NONE;
     //left-up,right-up, left-down, right-down
     vector<pair<int, int>> rectPoints;
+    Mat warpMatrix;
     bool choseRect = false;
     int distance = 3;
     Point penPoint;
@@ -57,6 +60,7 @@ private:
     int screenHeight = 100;
     int screenWidth = 200;
 
+    int sidePaddingWidth = 150;
 
 
     QImage ShowImage(Mat src, QLabel* label, QImage::Format format);
@@ -88,7 +92,7 @@ public Q_SLOTS:
     void updateImage();
     void confirm();
     void cancle();
-    Point GetPoint();
+    Point GetPoint(bool, Mat);
     void test();
 };
 

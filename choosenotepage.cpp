@@ -28,3 +28,8 @@ QPushButton *ChooseNotePage::addNoteBtn(){
 QPushButton *ChooseNotePage::returnBtn(){
     return ui->backToBookChoose;
 }
+
+void ChooseNotePage::setBookName(QString bookName){
+
+    ui->bookName->setText("选择笔记");
+}

@@ -1,7 +1,9 @@
 #include "imageconfig.h"
 #include "ui_imageconfig.h"
+#include "touchtracker.h"
 #include <thread>
 #include <iostream>
+#include <QDesktopWidget>
 using namespace std;
 using namespace cv;
 
@@ -10,6 +12,7 @@ extern VideoCapture capBottom1;
 extern VideoCapture capBottom2;
 
 //#define TESTING
+#define OCTU
 
 
 QImage ImageConfig::ShowImage(Mat src, QLabel* label, QImage::Format format = QImage::Format_ARGB32) {
@@ -35,9 +38,11 @@ ImageConfig::ImageConfig(QMainWindow *parent) :
 {
     ui->setupUi(this);
     connect(&theTimer, &QTimer::timeout, this, &ImageConfig::updateImage);
-
+    QDesktopWidget *desktop = QApplication::desktop();
+    screenWidth = desktop->screenGeometry(1).width() - 2*sidePaddingWidth;
+    screenHeight = desktop->screenGeometry(1).height();
     //showImage = true;
-
+    std::cout<<"width"<<screenWidth<<std::endl;
     theTimer.start(33);
 
     //QString fileName = QFileDialog::getOpenFileName(this, NULL, NULL, "*.bmp *.jpeg *.png *.jpeg 2000 *.gif *.jpg *.mp4");
@@ -174,6 +179,9 @@ void ImageConfig::ReactangleCalibration(){
         lineLeftRightParr = true;
     else
         verticalPoint = CallSharedPoint(lineLeft, lineRight);
+
+    CaliRect = true;
+    cout<<"h"<<endl;
 }
 
 void ImageConfig::PenCalibration(){
@@ -192,6 +200,8 @@ void ImageConfig::PenCalibration(){
     roi = selectROI(penMatTop, false);
     //rectangle(penMatTop, roi, Scalar( 255, 0, 0 ), 2, 1 );
     destroyWindow("ROI selector");
+    if(roi.area() == 0)
+        cancle();
 
     //Mat penMatTemp = penMatTop.clone();
     cvtColor(penMatTop, rectMat, CV_RGB2RGBA);
@@ -212,6 +222,7 @@ void ImageConfig::PenCalibration(){
     Mat target = penMatTop(roi);
     Mat midI, resI;
 
+#ifndef OCTU
     cvtColor(penMatTop, resI, CV_RGB2RGBA);
     MyCvtRGB2GRAY(resI, resI);
     int threshold_num = MyOtusThreshold(resI);
@@ -266,8 +277,6 @@ void ImageConfig::PenCalibration(){
         }
         }
     }
-
-
     int max = -1;
     for (int i = 0; i < target.rows; i++) {
         for (int j = 0; j < target.cols; j++) {
@@ -277,11 +286,19 @@ void ImageConfig::PenCalibration(){
             }
         }
     }
-    cout<< penPoint.x << " "<<penPoint.y << " " << max << endl;
+#else
+    blur(target, target, Size(6, 6));
+    cvtColor(target, target, CV_BGR2GRAY);
+    threshold(target, target, 0, 255, CV_THRESH_OTSU);
+
+    TouchTracker::findNibLeft(target, penPoint.x, penPoint.y);
+#endif
+    //cout<< penPoint.x << " "<<penPoint.y << " " << max << endl;
     circle(target, penPoint, 3, Scalar(0, 0, 255, 255), -1);
     circle(rectMat, penPoint + Point(roi.x , roi.y), 3, Scalar(0, 0, 255, 255), -1);
     imshow("t", target);
-
+    CaliPen = true;
+    cout<<"pen"<<endl;
     return;
 }
 
@@ -312,7 +329,7 @@ void ImageConfig::FindPointsInRect(Mat src){
         for (int j = 2; j < src.cols - 2; j++) {
             if(src.at<Vec4b>(i, j)[0])
                 continue;
-            cout<<i<<" "<<j<<endl;
+            //cout<<i<<" "<<j<<endl;
             //left-up
             if(i <= rectPoints[0].first && j <= rectPoints[0].second){
                 rectPoints[0].first = i;
@@ -373,7 +390,7 @@ void ImageConfig::FindPointsInRect(Mat src){
                 ;
             else{
                 if(((i - src.rows) * (i - src.rows) + (j - src.cols) * (j - src.cols)) <
-                        ((rectPoints[3].first - src.rows) * (rectPoints[0].first - src.rows) + (rectPoints[3].second - src.cols) * (rectPoints[3].second - src.cols))){
+                        ((rectPoints[3].first - src.rows) * (rectPoints[3].first - src.rows) + (rectPoints[3].second - src.cols) * (rectPoints[3].second - src.cols))){
                     rectPoints[3].first = i;
                     rectPoints[3].second = j;
                 }else{
@@ -386,6 +403,22 @@ void ImageConfig::FindPointsInRect(Mat src){
         circle(src, Point(rectPoints[i].second, rectPoints[i].first), 10, Scalar(0, 0, 255, 255), -1);
         cout<<rectPoints[i].first <<" "<<rectPoints[i].second <<endl;
     }
+    cv::Point2f src_vertices[4];
+    src_vertices[0] = cv::Point2f(rectPoints[0].second, rectPoints[0].first);
+    src_vertices[1] = cv::Point2f(rectPoints[1].second, rectPoints[1].first);
+    src_vertices[2] = cv::Point2f(rectPoints[2].second, rectPoints[2].first);
+    src_vertices[3] = cv::Point2f(rectPoints[3].second, rectPoints[3].first);
+    Point2f dst_vertices[4];
+    dst_vertices[0] = Point(0, 0);
+    dst_vertices[1] = Point(screenWidth,0);
+    dst_vertices[2] = Point(0,screenHeight);
+    dst_vertices[3] = Point(screenWidth,screenHeight);
+    warpMatrix = getPerspectiveTransform(src_vertices, dst_vertices);
+    std::cout<<warpMatrix.type()<<std::endl;
+    cv::Mat rotated = Mat(screenHeight, screenWidth, src.type());
+    warpPerspective(src, rotated, warpMatrix, rotated.size(), INTER_LINEAR, BORDER_CONSTANT);
+    cv::namedWindow( "warp perspective");
+                    cv::imshow( "warp perspective",rotated);
     return;
 }
 
@@ -399,15 +432,11 @@ void ImageConfig::confirm(){
 }
 
 void ImageConfig::cancle(){
-    if(choseRect){
-        choseRect = false;
-        PenCalibration();
-    }
-    else{
         ChangeButtonMode(false);
         ui->helpInfoDefault->raise();
-        ui->helpimage->clear();
-    }
+        capTop >> rectMat;
+        cvtColor(rectMat, rectMat, CV_RGB2RGBA);
+        theTimer.start(33);
 }
 
 Point ImageConfig::CallSharedPoint(pair<double, double> l1, pair<double, double> l2){
@@ -424,7 +453,23 @@ pair<double, double> ImageConfig::CallLine(Point p1, Point p2){
 }
 
 Point ImageConfig::GetScreenPoint(Point in){
-    pair<double, double> lineVer, lineHor;
+    int coordinates[3] = {in.x, in.y, 1};
+    Mat originVector = Mat(3, 1, CV_64F);
+
+    originVector.at<double>(0,0) = in.x;
+    originVector.at<double>(1,0) = in.y;
+    originVector.at<double>(2,0) = 1;
+    Mat transformedVector = Mat(3, 1, CV_64F);
+
+    transformedVector =  warpMatrix*originVector;
+
+    //cvMatMul(warpMatrix, &originVector, &transformedVector);
+    Point2d out;
+    out.x = transformedVector.at<double>(0,0);
+    out.y = transformedVector.at<double>(1,0);
+    std::cout<<"outx"<<out.x<<"outy"<<out.y<<std::endl;
+    return Point(out.x,out.y);
+    /*pair<double, double> lineVer, lineHor;
     Point res;
     if(lineUpDownParr){
         lineVer.first = lineTop.first;
@@ -446,7 +491,7 @@ Point ImageConfig::GetScreenPoint(Point in){
     res.x = (CallDistance(upSharedPoint,  Point(rectPoints[0].first, rectPoints[0].second))
             / CallDistance( Point(rectPoints[1].first, rectPoints[1].second),  Point(rectPoints[0].first, rectPoints[0].second))) * screenWidth;
 
-    return res;
+    return res;*/
 }
 
 double ImageConfig::CallDistance(Point p1,  Point p2){
@@ -457,14 +502,18 @@ double ImageConfig::CallDistance(Point p1,  Point p2){
     return distance;
 }
 
-Point ImageConfig::GetPoint(){
-    Mat temp;
+Point ImageConfig::GetPoint(bool touching, Mat temp){
     Rect2d res;
-    capTop >> temp;
     double timer = (double)getTickCount();
     bool ok = tracker->update(temp, res);
-    float fps = getTickFrequency() / ((double)getTickCount() - timer);
-    return GetScreenPoint(Point(res.x + penPoint.x, res.y + penPoint.y));
+    //float fps = getTickFrequency() / ((double)getTickCount() - timer);
+    rectangle(temp, res, Scalar( 255, 0, 0, 255 ), 2, 1 );
+    circle(temp, penPoint + Point(res.x , res.y), 3, Scalar(0, 0, 255, 255), -1);
+    std::cout << res.x << " " << penPoint.x << "ahha" << std::endl;
+    if(touching)
+        return GetScreenPoint(Point(res.x + penPoint.x, res.y + penPoint.y));
+    else
+        return Point(0,0);
 }
 
 void ImageConfig::test(){

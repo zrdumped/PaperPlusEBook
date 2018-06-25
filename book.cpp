@@ -58,11 +58,18 @@ std::vector<Note> Book::getNotes(){
 }
 
 QString Book::getBookPageWithPageNumber(int p){
+    std::cout<<"gonna read in book"<<std::endl;
+    std::cout<<"pghere::"<<p<<std::endl;
+    if(p < 0)
+        return "";
     if(!bookFStream.is_open())
         openBook();
+    std::cout<<"open success"<<std::endl;
     unsigned int start = pagemeta.page2Offset(p - 1);
     unsigned int size = pagemeta.page2Offset(p) - start;
+    std::cout<<"start"<<start<<"size"<<size<<"end"<<pagemeta.page2Offset(p)<<std::endl;
     bookFStream.seekg(start);
+    std::cout<<"gonna read in fstream"<<std::endl;
     return bookFStream.readsome(size);
 }
 

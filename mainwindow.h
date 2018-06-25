@@ -53,9 +53,12 @@ public:
     void normalInformation(QString msg);
     bool normalDecision(QString msg);
     void turnToPageWithLeftPageNumber(int pageNumber);
+    ImageConfig *window;
+    void simulateClick(int x, int y);
+    void simulateFly();
 private:
     Ui::MainWindow *ui;
-    ImageConfig *window;
+
     Menu *bookMenu;
     Menu *noteMenu;
     ArrowWidget *penStyle;
@@ -85,19 +88,20 @@ private:
     int sampleNumber = 100;
     std::fstream book;
     int entryPerPage = 8;
-    int sidePaddingWidth = 140;
+    int sidePaddingWidth = 150;
     int middlePaddingWidth = 80;
-    int qzxingSideLength = 80;
+    int qzxingSideLength = 100;
     int iconSideLength = 40;
     int charPerLine = 20;
     int linePerPage = 20;
-    int margin = 12;
+    int margin = 9;
+    bool isCalibration = false;
     QString dayLightStyle = "background-color: rgb(249, 245, 232);color: rgb(38, 38, 38);";
     QString nightLightStyle = "background-color: rgb(11, 11, 11);color: rgb(59, 59, 59);";
     bool isDayLighting = false;
-    int penWidth = 6;
-    int eraserWidth = 6;
-    QColor penColor = Qt::red;
+    int penWidth = 2;
+    int eraserWidth = 5;
+    QColor penColor = QColor(254,83,9,255);
     void showAllUIs();
     void hideAllUIs();
     void loadAllBookEntries();

@@ -17,6 +17,7 @@ public:
     ~ChooseNotePage();
     QPushButton *addNoteBtn();
     QPushButton *returnBtn();
+    void setBookName(QString bookName);
 private:
     Ui::ChooseNotePage *ui;
 };
