@@ -1,20 +1,8 @@
 # Paper Plus E-Book
+A device combines ebook and real book. The user can read a papery book just like the normal book but there are no words printed on the book. Instead, we project the UI & content with our projector. And the reader can also take notes on the book with a pen which does not contains ink. We use 2 cameras to calculate the position the user put the pen-point on and draw it on our software and project it back on the paper.
 
-Qt program for reading & recording device
+This devices aims to convenient the readers and provide them tradition reading and noting experience. They do not need multiple papery books any more. Also they can read pdf/txt files on a papery books.
 
-OpenCV build with contrib:https://jbox.sjtu.edu.cn/l/FoibN4
+* This system is too complicated to build up, and we only implement a primary version. So only a [video](http://www.google.com) and some photos can be shown.
 
-## TODO
-  Detect the point of the pen using Hough  
-  Replace the ROI by Maching Learning (using python)  
-  Convert the position on the projection to the point on the book  
-  Train the model so that the loss decrease below 1 stably
-
-## 6.17
-  Debug & calibrate the projection area and tracking area 
-
-## 6.16
-  Some Calibration UI
-
-## 6.15
-  Config the tensor flow environment, train the model:
+## Photos and Screenshots
