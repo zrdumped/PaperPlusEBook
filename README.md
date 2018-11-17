@@ -9,20 +9,25 @@ This devices aims to offer convenience to the readers and provide them tradition
 * The prototype design diagram
 <p align="center">
     <img src="https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/1.png" alt="Sample"  width="634" height="290">
-    <p align="center">
-        <em>IMAGE</em>
-    </p>
 </p>
 
 * Some UI design sketches
-![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/2.png)
-![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/5.png)
+<p align="center">
+    <img src="https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/5.png" alt="Sample"  width="315" height="408">
+    <img src="https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/2.png" alt="Sample"  width="315" height="408">
+</p>
 
 * The real UI we implemented
-![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/4.png)
+<p align="center">
+    <img src="https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/4.png" alt="Sample"  width="720" height="387">
+</p>
 
 * Screenshot of some calibration steps
-![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/6.png)
+<p align="center">
+    <img src="https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/6.png" alt="Sample"  width="829" height="450">
+</p>
 
 * The final product without any beautified
-![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/3.png)
+<p align="center">
+    <img src="https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/3.png" alt="Sample"  width="298" height="397">
+</p>
