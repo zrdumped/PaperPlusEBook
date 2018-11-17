@@ -3,6 +3,8 @@ A device combines ebook and real book. The user can read a papery book just like
 
 This devices aims to convenient the readers and provide them tradition reading and noting experience. They do not need multiple papery books any more. Also they can read pdf/txt files on a papery books.
 
-* This system is too complicated to build up, and we only implement a primary version. So only a [video](http://www.google.com) and some photos can be shown.
+* This system is too complicated to build up, and we only implement a primary version. So only a [video](https://github.com/zrdumped/PaperPlusEBook/releases/download/v1.0/Paper+EBook.demo.mp4) and some photos can be shown.
 
 ## Photos and Screenshots
+* The prototype design diagram
+![Image1](PaperPlusEBook/ReadmeImages/1.png)
