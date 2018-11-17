@@ -9,7 +9,8 @@ This devices aims to offer convenience to the readers and provide them tradition
 * The prototype design diagram
 ![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/1.png)
 * Some UI design sketches
-![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/2.png)![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/5.png)
+![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/2.png)
+![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/5.png)
 * The real UI we implemented
 ![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/4.png)
 * Screenshot of some calibration steps
