@@ -7,4 +7,4 @@ This devices aims to convenient the readers and provide them tradition reading a
 
 ## Photos and Screenshots
 * The prototype design diagram
-![Image1](PaperPlusEBook/ReadmeImages/1.png)
+![Image1](https://github.com/zrdumped/PaperPlusEBook/blob/master/ReadmeImages/1.png)
